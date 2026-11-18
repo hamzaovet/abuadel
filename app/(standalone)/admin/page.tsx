@@ -673,25 +673,20 @@ export default function AdminDashboardPage() {
     }
   }, [currentUser, activeTab, pastrySubTab, factoryDate]);
 
-  // Active Outlet Info & Branch Isolation Helpers
-  const activeOutlet = outlets.find((o) => o.id === selectedOutletId);
-  const isSoulmate = activeOutlet?.code === "SOULMATE_CAFE";
-  const isAbuAdel = activeOutlet?.code === "ABU_ADEL_PATISSERIE";
+  // Standalone Abu Adel Patisserie — Strictly Abu Adel Only (Zero Soulmate!)
+  const activeOutlet = outlets.find((o) => o.code === "ABU_ADEL_PATISSERIE") || outlets[0];
+  const isSoulmate = false;
+  const isAbuAdel = true;
 
   const isOwner = currentUser?.role === "owner";
   const isBranchManager = currentUser?.role === "branch_manager";
-  const userOutlet = outlets.find((o) => o.id === currentUser?.outletId) || currentUser?.outlet;
-  const isUserSoulmate =
-    userOutlet?.code === "SOULMATE_CAFE" ||
-    currentUser?.username?.includes("soulmate");
-  const isUserAbuAdel =
-    userOutlet?.code === "ABU_ADEL_PATISSERIE" ||
-    currentUser?.username?.includes("abuadel");
+  const isUserSoulmate = false;
+  const isUserAbuAdel = true;
 
-  // Multi-tier Isolation Views:
-  const isViewingSoulmate = isUserSoulmate || (isOwner && isSoulmate);
-  const isViewingAbuAdel = isUserAbuAdel || (isOwner && isAbuAdel);
-  const isViewingAll = isOwner && (selectedOutletId === "ALL" || !selectedOutletId);
+  // Strictly Single-Brand Abu Adel View:
+  const isViewingSoulmate = false;
+  const isViewingAbuAdel = true;
+  const isViewingAll = false;
 
   // KPIs Calculations (Strictly Net Store Revenue: excludes Driver Delivery Fees & unpaid future scheduled bookings)
   const paidOrders = orders.filter((o) => o.paymentStatus === "PAID" && o.status !== "CANCELLED");
@@ -945,7 +940,7 @@ export default function AdminDashboardPage() {
   const handleExportFinancialCSV = () => {
     const data = filteredReportData;
     let csvContent = "\uFEFF"; // UTF-8 BOM
-    csvContent += "تقرير الحسابات والأرباح الشامل - مجموعة حلواني أبو عادل & سول ميت كافيه VIP\n";
+    csvContent += "تقرير الحسابات والأرباح الشامل - حلواني أبو عادل\n";
     csvContent += `الفترة,${reportTimeframe === "TODAY" ? "اليوم" : reportTimeframe === "WEEK" ? "آخر 7 أيام" : reportTimeframe === "MONTH" ? "هذا الشهر" : "كافة الفترات"}\n`;
     csvContent += `الفرع,${reportOutletFilter === "ALL" ? "كافة الفروع" : outlets.find((o) => o.id === reportOutletFilter)?.name || ""}\n`;
     csvContent += `تاريخ التصدير,${new Date().toLocaleString("ar-EG")}\n\n`;
@@ -4186,41 +4181,17 @@ export default function AdminDashboardPage() {
                   />
                 </div>
 
-                {isOwner && (
-                  <select
-                    value={menuOutletFilter}
-                    onChange={(e) => setMenuOutletFilter(e.target.value)}
-                    className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-amber-300 focus:outline-none focus:border-amber-500 font-bold"
-                  >
-                    <option value="ALL">🌟 كل المنافذ (أبو عادل & سول ميت)</option>
-                    {outlets.map((o) => (
-                      <option key={o.id} value={o.id}>
-                        {o.code === "SOULMATE_CAFE" ? "☕ سول ميت كافيه VIP" : "🍰 حلواني أبو عادل"}
-                      </option>
-                    ))}
-                  </select>
-                )}
-
                 <select
                   value={menuCategoryFilter}
                   onChange={(e) => setMenuCategoryFilter(e.target.value)}
                   className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus:border-amber-500"
                 >
-                  <option value="ALL">📂 كافة التصنيفات</option>
-                  <optgroup label="☕ سول ميت كافيه">
-                    {SOULMATE_CATEGORIES.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.icon} {c.nameAr} ({c.nameEn})
-                      </option>
-                    ))}
-                  </optgroup>
-                  <optgroup label="🍰 حلواني أبو عادل">
-                    {ABU_ADEL_CATEGORIES.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.icon} {c.nameAr} ({c.nameEn})
-                      </option>
-                    ))}
-                  </optgroup>
+                  <option value="ALL">📂 كافة تصنيفات حلواني أبو عادل</option>
+                  {ABU_ADEL_CATEGORIES.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.icon} {c.nameAr} ({c.nameEn})
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -5941,7 +5912,7 @@ export default function AdminDashboardPage() {
                     <span>مناطق التوصيل (الدليفري) والتسعير الديناميكي ({deliveryZones.length} منطقة)</span>
                   </h3>
                   <p className="text-[11px] text-slate-400 mt-0.5">
-                    عدّل رسوم كل منطقة أو أضف مناطق جديدة لأبو عادل وسول ميت — تظهر فوراً للعملاء في صفحة الطلب وللكاشير لتجميع الطيارات
+                    عدّل رسوم كل منطقة أو أضف مناطق جديدة لحلواني أبو عادل — تظهر فوراً للعملاء في صفحة الطلب وللكاشير لتجميع الطيارات
                   </p>
                 </div>
 
@@ -7104,7 +7075,7 @@ export default function AdminDashboardPage() {
                         }}
                         className="bg-slate-950 text-slate-200 text-xs px-3 py-1.5 rounded-lg border border-slate-700"
                       >
-                        <option value="ALL">كلا المحلين (سول ميت + أبو عادل)</option>
+                        <option value="ALL">🍰 عملاء حلواني أبو عادل</option>
                         {outlets.map((o) => (
                           <option key={o.id} value={o.id}>
                             {o.code === "SOULMATE_CAFE" ? "☕ سول ميت كافيه VIP" : "🍰 حلواني أبو عادل"}
@@ -7978,20 +7949,11 @@ export default function AdminDashboardPage() {
                     }}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-amber-500"
                   >
-                    <optgroup label="☕ سول ميت كافيه">
-                      {SOULMATE_CATEGORIES.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.icon} {c.nameAr} ({c.nameEn})
-                        </option>
-                      ))}
-                    </optgroup>
-                    <optgroup label="🍰 حلواني أبو عادل">
-                      {ABU_ADEL_CATEGORIES.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.icon} {c.nameAr} ({c.nameEn})
-                        </option>
-                      ))}
-                    </optgroup>
+                    {ABU_ADEL_CATEGORIES.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.icon} {c.nameAr} ({c.nameEn})
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>

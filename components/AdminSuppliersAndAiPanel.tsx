@@ -999,18 +999,6 @@ export default function AdminSuppliersAndAiPanel({
             <FileText className="w-4 h-4" />
             <span>كشف حساب الموردين التفصيلي 📒</span>
           </button>
-          <button
-            type="button"
-            onClick={() => setSubTab("consignments")}
-            className={`px-4 py-2 rounded-xl text-xs font-black flex items-center gap-1.5 transition cursor-pointer ${
-              subTab === "consignments"
-                ? "bg-gradient-to-r from-indigo-500 to-teal-400 text-slate-950 shadow-lg"
-                : "text-slate-300 hover:bg-slate-800"
-            }`}
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>التحويلات والأمانات (أبو عادل ↔ سول ميت) 🔄</span>
-          </button>
         </div>
 
         <button
@@ -1380,9 +1368,8 @@ export default function AdminSuppliersAndAiPanel({
                   onChange={(e) => setAiDomain(e.target.value as any)}
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold"
                 >
-                  <option value="ABU_ADEL_PRODUCTS">🍰 منتجات حلواني أبو عادل (أو تحويل لسول ميت)</option>
-                  <option value="SOULMATE_RAW_MATERIALS">☕ خامات وأكواب سول ميت كافيه</option>
-                  <option value="AUTO">🔍 تلقائي (بحث شامل في جميع الأصناف والخامات)</option>
+                  <option value="ABU_ADEL_PRODUCTS">🍰 منتجات حلويات أبو عادل (المعمل / المصنع)</option>
+                  <option value="AUTO">🔍 تلقائي (بحث شامل في جميع الأصناف)</option>
                 </select>
               </div>
 
@@ -2729,10 +2716,8 @@ export default function AdminSuppliersAndAiPanel({
                   }
                   className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white"
                 >
-                  <option value="FACTORY">🏭 مصنع منتجات حلويات (أبو عادل)</option>
-                  <option value="RAW_MATERIALS">📦 مورد خامات / أكواب (سول ميت)</option>
-                  <option value="INTERNAL_ABU_ADEL">🔄 مورد داخلي (أبو عادل ➔ سول ميت)</option>
-                  <option value="GENERAL">🤝 مورد عام</option>
+                  <option value="FACTORY">🏭 مصنع ومعمل حلويات أبو عادل</option>
+                  <option value="GENERAL">🤝 مورد عام / مستلزمات وتغليف</option>
                 </select>
               </div>
 

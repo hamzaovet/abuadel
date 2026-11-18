@@ -540,12 +540,11 @@ export default function AdminLoyaltyCrmOffersPanel({
                 <div className="flex items-center gap-2 mb-1.5">
                   <Award className="w-6 h-6 text-amber-400" />
                   <h2 className="text-lg sm:text-xl font-black text-white">
-                    محرك نقاط الولاء ومكافآت العملاء الموحد (أبو عادل & سول ميت)
+                    محرك نقاط الولاء ومكافآت عملاء حلواني أبو عادل 🍰👑
                   </h2>
                 </div>
                 <p className="text-xs text-slate-300 max-w-2xl leading-relaxed">
-                  كل عملية شراء من <strong className="text-emerald-300">حلواني أبو عادل</strong> أو{" "}
-                  <strong className="text-amber-300">سول ميت كافيه VIP</strong> بتتسجل تلقائياً في قاعدة بيانات العميل وبتجمعله نقاط ولاء حسب القواعد اللي بتحددها هنا ديناميكياً.
+                  كل عملية شراء من <strong className="text-emerald-300">حلواني أبو عادل</strong> بتتسجل تلقائياً في قاعدة بيانات العميل وبتجمعله نقاط ولاء حسب القواعد اللي بتحددها هنا ديناميكياً.
                 </p>
               </div>
 
@@ -584,8 +583,8 @@ export default function AdminLoyaltyCrmOffersPanel({
                 <span>تحديد معادلة النقاط والهدف وقيمة الهدية (ديناميكي 100%)</span>
               </h3>
 
-              {/* Brand Toggles */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Brand Toggle (Abu Adel Only) */}
+              <div className="grid grid-cols-1 gap-3">
                 <label
                   className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition ${
                     loyaltyForm.loyaltyAppliesToAbuAdel
@@ -604,27 +603,6 @@ export default function AdminLoyaltyCrmOffersPanel({
                       setLoyaltyForm({ ...loyaltyForm, loyaltyAppliesToAbuAdel: e.target.checked })
                     }
                     className="w-4 h-4 accent-emerald-500"
-                  />
-                </label>
-
-                <label
-                  className={`flex items-center justify-between p-3.5 rounded-xl border cursor-pointer transition ${
-                    loyaltyForm.loyaltyAppliesToSoulmate
-                      ? "bg-amber-500/15 border-amber-500/40 text-amber-200"
-                      : "bg-slate-950 border-slate-800 text-slate-400"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 text-xs font-black">
-                    <span>☕</span>
-                    <span>تطبيق على سول ميت كافيه VIP</span>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={loyaltyForm.loyaltyAppliesToSoulmate}
-                    onChange={(e) =>
-                      setLoyaltyForm({ ...loyaltyForm, loyaltyAppliesToSoulmate: e.target.checked })
-                    }
-                    className="w-4 h-4 accent-amber-500"
                   />
                 </label>
               </div>
@@ -1315,9 +1293,7 @@ export default function AdminLoyaltyCrmOffersPanel({
                   onChange={(e) => updateDiscount("brandScope", e.target.value)}
                   className="w-full bg-black border border-slate-700 rounded-xl px-3 py-2 text-xs text-white font-bold"
                 >
-                  <option value="ALL">🌐 أبو عادل + سول ميت معاً</option>
-                  <option value="ABU_ADEL_PATISSERIE">🍰 حلواني أبو عادل فقط</option>
-                  <option value="SOULMATE_CAFE">☕ سول ميت كافيه VIP فقط</option>
+                  <option value="ABU_ADEL_PATISSERIE">🍰 حلواني أبو عادل</option>
                 </select>
 
                 <div className="space-y-1.5 text-xs">

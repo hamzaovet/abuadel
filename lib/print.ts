@@ -129,45 +129,42 @@ export function generateSoulmateReceiptHtml(order: any, settings?: any): string 
   const totalQty = items.reduce((s, it) => s + (Number(it.qty) || 1), 0);
   const subtotal = Number(order.subtotal ?? order.finalAmount ?? 0);
   const discount = Number(order.discountAmount ?? 0);
-  const deliveryFee = Number(order.deliveryFee ?? 0);
-  const finalAmount = Number(order.finalAmount ?? subtotal - discount + deliveryFee);
+  const tax = Number(order.taxAmount ?? 0);
+  const service = Number(order.serviceCharge ?? 0);
+  const finalAmount = Number(order.finalAmount ?? subtotal - discount + tax + service);
 
   const ticketNo =
     order.dailyTicketNo ||
-    String(order.orderNumber || "1").replace(/\D/g, "").slice(-5) ||
+    String(order.orderNumber || "1").replace(/\D/g, "").slice(-4) ||
     "1";
 
-  const isPreOrder = Boolean(order.isScheduled);
-  const numberLabel = isPreOrder ? "رقم الحجز" : "رقم الفاتورة";
-  const sectionBanner = isPreOrder
-    ? "الحجوزات"
-    : order.orderType === "DELIVERY"
-    ? "دليفري"
-    : "تيك أواي";
+  const orderTypeTitle =
+    order.orderType === "DINE_IN"
+      ? `اوردر صالة - بون رقم ${ticketNo}`
+      : order.orderType === "DELIVERY"
+      ? `اوردر دليفري - بون رقم ${ticketNo}`
+      : `اوردر تيك أواي - بون رقم ${ticketNo}`;
 
-  const formatDateSlash = (d: Date) =>
-    `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}/${d.getFullYear()}`;
-  const formatTime24 = (d: Date) =>
-    `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  const tableDisplay = order.tableNumber
+    ? String(order.tableNumber).replace(/^T-0?/i, "")
+    : "";
 
-  const scheduledDateObj = order.scheduledFor ? new Date(order.scheduledFor) : null;
-  const address = settings?.cafeAddress || "حدائق القبة - القاهرة";
-  const phone = settings?.hotline || settings?.abuAdelPhone || "15992";
-  const payCodeEn = paymentLabelEn(order.paymentMethod).toUpperCase();
+  const address = settings?.cafeAddress || "99st zamza mn elshisk 8orab";
+  const phone = settings?.soulmatePhone || settings?.whatsapp || "01557879033";
 
   const rowsHtml = items
     .map((it) => {
       const qty = Number(it.qty) || 1;
       const price = Number(it.price) || 0;
       const lineTotal = (price * qty).toFixed(2);
-      const displayName = it.nameAr || it.nameEn || "صنف";
+      const displayName = it.nameEn ? `${it.nameEn}${it.nameAr ? ` / ${it.nameAr}` : ""}` : it.nameAr || "صنف";
       const noteLine = it.notes ? `<div style="font-size:9px;color:#222;margin-top:1px;">* ${it.notes}</div>` : "";
       return `
         <tr>
-          <td class="col-item">${displayName}${noteLine}</td>
-          <td class="col-num">${price.toFixed(2)}</td>
-          <td class="col-num">${qty.toFixed(3)}</td>
-          <td class="col-num" style="font-weight:800;">${lineTotal}</td>
+          <td style="text-align:right;font-weight:600;padding:3px 4px;">${displayName}${noteLine}</td>
+          <td style="text-align:center;font-family:monospace;">${price.toFixed(0)}</td>
+          <td style="text-align:center;font-family:monospace;font-weight:700;">${qty}</td>
+          <td style="text-align:center;font-family:monospace;font-weight:700;">${lineTotal}</td>
         </tr>
       `;
     })
@@ -177,73 +174,56 @@ export function generateSoulmateReceiptHtml(order: any, settings?: any): string 
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <title>فاتورة حلواني أبو عادل</title>
+  <title>Soulmate Receipt</title>
   <style>
     ${COMMON_THERMAL_CSS}
-    .logo-wrap { text-align: center; margin-bottom: 6px; }
-    .brand-ar { font-size: 22px; font-weight: 900; line-height: 1.05; letter-spacing: 0.2px; }
-    .brand-sub { font-size: 11px; font-weight: 800; margin-top: 1px; }
-    .meta-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 4px 0 6px;
-      font-size: 11px;
-      font-weight: 700;
-    }
-    .meta-table td { padding: 2px 2px; vertical-align: middle; }
-    .meta-label { width: 30%; text-align: right; font-weight: 800; }
-    .meta-val { text-align: center; font-weight: 700; }
-    .meta-left { width: 26%; text-align: left; font-family: monospace; font-weight: 900; font-size: 12px; }
-    .ticket-box {
-      display: inline-block;
-      border: 1.5px solid #000;
-      padding: 1px 10px;
-      font-family: monospace;
-      font-size: 13px;
+    .logo-wrap { text-align: center; margin-bottom: 4px; }
+    .logo-brand {
+      font-family: "Brush Script MT", "Segoe Script", Georgia, serif;
+      font-size: 27px;
       font-weight: 900;
-    }
-    .cust-phone {
-      text-align: center;
-      font-family: monospace;
-      font-size: 12.5px;
-      font-weight: 900;
-      margin: 3px 0 2px;
+      font-style: italic;
+      line-height: 1;
       letter-spacing: 0.5px;
     }
-    .section-title {
-      text-align: center;
-      font-size: 14px;
-      font-weight: 900;
-      margin: 2px 0 6px;
-      padding-bottom: 3px;
-      border-bottom: 1.5px solid #000;
+    .logo-sub {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-top: 1px;
     }
-    table.abuadel-tbl {
+    .bon-box {
+      border: 1.5px solid #000;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 900;
+      padding: 3px 6px;
+      margin: 5px 0;
+    }
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 2px 2px;
+    }
+    table.items-tbl {
       width: 100%;
       border-collapse: collapse;
-      font-size: 10px;
-      margin-top: 2px;
+      margin-top: 6px;
+      font-size: 10.5px;
     }
-    table.abuadel-tbl th {
-      border-top: 1px solid #000;
+    table.items-tbl th {
       border-bottom: 1.5px solid #000;
-      border-left: 1px solid #000;
-      border-right: 1px solid #000;
       padding: 3px 2px;
       font-weight: 900;
       text-align: center;
     }
-    table.abuadel-tbl td {
-      border-left: 1px solid #000;
-      border-right: 1px solid #000;
-      padding: 2.5px 3px;
-      vertical-align: top;
+    table.items-tbl td {
+      border: 1px solid #000;
+      padding: 3px 2px;
+      vertical-align: middle;
     }
-    table.abuadel-tbl tbody tr:last-child td {
-      border-bottom: 1.5px solid #000;
-    }
-    .col-item { text-align: right; font-weight: 700; width: 44%; }
-    .col-num { text-align: center; font-family: monospace; font-size: 10px; }
     .sum-line {
       display: flex;
       justify-content: space-between;
@@ -256,7 +236,7 @@ export function generateSoulmateReceiptHtml(order: any, settings?: any): string 
     .sum-thick {
       border-top: 1.5px solid #000;
       border-bottom: 1.5px solid #000;
-      margin-top: 5px;
+      margin-top: 4px;
       font-size: 12px;
       font-weight: 900;
     }
@@ -270,88 +250,70 @@ export function generateSoulmateReceiptHtml(order: any, settings?: any): string 
       font-size: 14px;
       font-weight: 900;
     }
+    .pay-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 8px;
+      font-size: 11.5px;
+      font-weight: 800;
+    }
     .footer-block {
       text-align: center;
-      margin-top: 7px;
+      margin-top: 6px;
       padding-top: 4px;
       border-top: 1px dashed #000;
       font-size: 10.5px;
       font-weight: 700;
-      line-height: 1.45;
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
-  <!-- Authentic Abu Adel Circular Monogram Emblem (Photo 3 Replica) -->
   <div class="logo-wrap">
-    <svg width="56" height="56" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 2px;">
-      <circle cx="40" cy="40" r="35" fill="none" stroke="#000" stroke-width="3.5" />
-      <circle cx="40" cy="40" r="29" fill="none" stroke="#000" stroke-width="1.4" />
-      <text x="40" y="54" text-anchor="middle" font-family="Tahoma, Arial, sans-serif" font-size="44" font-weight="900" fill="#000">ع</text>
-      <text x="72" y="18" font-family="Arial, sans-serif" font-size="8" font-weight="900" fill="#000">TM</text>
+    <svg width="42" height="24" viewBox="0 0 64 36" xmlns="http://www.w3.org/2000/svg" style="display:block;margin:0 auto 2px;">
+      <path d="M24 10 C24 5, 30 5, 32 9 C34 5, 40 5, 40 10 C40 14, 32 18, 32 18 C32 18, 24 14, 24 10 Z" fill="none" stroke="#000" stroke-width="2.2"/>
+      <path d="M18 20 H44 V26 C44 31, 39 34, 31 34 C23 34, 18 31, 18 26 Z" fill="none" stroke="#000" stroke-width="2.5"/>
+      <path d="M44 21 H48 C51 21, 51 28, 44 28" fill="none" stroke="#000" stroke-width="2.2"/>
+      <line x1="12" y1="35" x2="50" y2="35" stroke="#000" stroke-width="2"/>
     </svg>
-    <div class="brand-ar">أبو عادل</div>
-    <div class="brand-sub">حلّي يومك</div>
+    <div class="logo-brand">Soulmate</div>
+    <div class="logo-sub">Dessert &amp; coffee</div>
   </div>
 
-  <!-- Exact Photo 3 Metadata Block -->
-  <table class="meta-table">
-    <tr>
-      <td class="meta-label">${numberLabel}</td>
-      <td class="meta-val"><span class="ticket-box">${ticketNo}</span></td>
-      <td class="meta-left">${payCodeEn}</td>
-    </tr>
-    <tr>
-      <td class="meta-label">التاريخ</td>
-      <td class="meta-val" dir="ltr">${formatDateSlash(created)}</td>
-      <td class="meta-left" dir="ltr">${formatTime24(created)}</td>
-    </tr>
-    <tr>
-      <td class="meta-label">الكاشير</td>
-      <td class="meta-val" colspan="2">${order.cashierName || "كاشير أبو عادل"}</td>
-    </tr>
-    ${
-      scheduledDateObj
-        ? `<tr>
-            <td class="meta-label">تاريخ الاستلام</td>
-            <td class="meta-val" dir="ltr">${formatDateSlash(scheduledDateObj)}</td>
-            <td class="meta-left" dir="ltr">${formatTime24(scheduledDateObj)}</td>
-          </tr>`
-        : ""
-    }
-    ${
-      order.customerName
-        ? `<tr>
-            <td class="meta-label">اسم العميل</td>
-            <td class="meta-val" colspan="2">${order.customerName}</td>
-          </tr>`
-        : ""
-    }
-  </table>
+  <div class="bon-box">${orderTypeTitle}</div>
 
-  ${order.customerPhone ? `<div class="cust-phone" dir="ltr">${order.customerPhone}</div>` : ""}
   ${
-    order.deliveryAddress
-      ? `<div style="text-align:center;font-size:10px;font-weight:700;margin-bottom:3px;">${order.deliveryAddress}</div>`
+    order.orderType === "DINE_IN"
+      ? `<div class="meta-row">
+          <span>الصالة: صالة 1</span>
+          <span>الطاولة: ${tableDisplay || "-"}</span>
+        </div>`
+      : order.customerName
+      ? `<div class="meta-row">
+          <span>العميل: ${order.customerName}</span>
+          <span>${order.customerPhone || ""}</span>
+        </div>`
       : ""
   }
 
-  <div class="section-title">${sectionBanner}${isPreOrder ? (order.orderType === "DELIVERY" ? " (دليفري)" : " (استلام فرع)") : ""}</div>
+  <div class="meta-row" dir="ltr">
+    <span>${formatTimePA(created)}</span>
+    <span>${formatDateYMD(created)}</span>
+  </div>
 
   ${
     order.notes
-      ? `<div style="border:1px dashed #000;padding:3px 5px;margin-bottom:5px;font-size:10px;font-weight:700;">ملاحظة: ${order.notes}</div>`
+      ? `<div style="border:1px dashed #000;padding:3px 5px;margin-top:4px;font-size:10px;font-weight:700;">ملاحظة للباريستا: ${order.notes}</div>`
       : ""
   }
 
-  <!-- Exact Photo 3 4-Column Vertical-Lined Items Table -->
-  <table class="abuadel-tbl">
+  <table class="items-tbl">
     <thead>
       <tr>
-        <th style="width:44%;">ITEM</th>
-        <th style="width:18%;">السعر</th>
-        <th style="width:17%;">كمية</th>
-        <th style="width:21%;">اجمالي</th>
+        <th style="width:46%;">الصنف</th>
+        <th style="width:16%;">السعر</th>
+        <th style="width:14%;">الكمية</th>
+        <th style="width:24%;">الاجمالى</th>
       </tr>
     </thead>
     <tbody>
@@ -360,44 +322,41 @@ export function generateSoulmateReceiptHtml(order: any, settings?: any): string 
   </table>
 
   <div class="sum-line sum-thick">
-    <span>الاجمالي</span>
-    <span style="font-family:monospace;">${totalQty.toFixed(3)}</span>
+    <span>الاجمالى</span>
+    <span style="font-family:monospace;">${totalQty}</span>
     <span style="font-family:monospace;">${subtotal.toFixed(2)}</span>
   </div>
 
-  ${
-    discount > 0 || deliveryFee > 0
-      ? `<div class="sum-line">
-          <span>الخصم: ${discount.toFixed(2)}</span>
-          <span>التوصيل: ${deliveryFee.toFixed(2)}</span>
-        </div>`
-      : ""
-  }
+  <div class="sum-line">
+    <span>الخصم</span>
+    <span style="font-family:monospace;">${discount.toFixed(2)}</span>
+    <span>الضريبة</span>
+    <span style="font-family:monospace;">${tax.toFixed(2)}</span>
+  </div>
 
-  ${
-    Number(order.depositPaid || 0) > 0 || Number(order.depositRequired || 0) > 0
-      ? `<div class="sum-line">
-          <span>العربون: ${Number(order.depositPaid || 0).toFixed(2)}</span>
-          <span>المتبقي: ${Math.max(0, finalAmount - Number(order.depositPaid || 0)).toFixed(2)}</span>
-        </div>`
-      : ""
-  }
+  <div class="sum-line">
+    <span>الخدمة</span>
+    <span style="font-family:monospace;">${service.toFixed(2)}</span>
+  </div>
 
   <div class="net-box">
-    <span>الصافي</span>
+    <span>الصافى</span>
+    <span style="font-family:monospace;">${finalAmount.toFixed(2)}</span>
+  </div>
+
+  <div class="pay-row">
+    <span>${paymentLabelEn(order.paymentMethod)}</span>
     <span style="font-family:monospace;">${finalAmount.toFixed(2)}</span>
   </div>
 
   <div class="footer-block">
-    <div style="font-size:12px;font-weight:900;">حلواني أبو عادل — حلّي يومك</div>
-    <div>${address}</div>
-    <div style="font-family:monospace;font-size:12px;font-weight:900;">الخط الساخن: ${phone}</div>
+    <div style="font-size:12px;font-weight:900;">Soulmate</div>
+    <div dir="ltr">${address}</div>
+    <div dir="ltr" style="font-family:monospace;font-size:11.5px;font-weight:900;">${phone}</div>
   </div>
 </body>
 </html>`;
 }
-
-export const generateAbuAdelReceiptHtml = generateSoulmateReceiptHtml;
 
 export interface DailyReportCategorySection {
   categoryName: string;
@@ -518,8 +477,8 @@ export function generateDailyItemsReportHtml(data: DailyReportPayload): string {
   </style>
 </head>
 <body>
-  <div class="title">تقرير مبيعات اليوم</div>
-  <div class="subtitle">وردية رقم: ${data.reportNumber} (${data.shiftLabel})</div>
+  <div class="title">${data.dateStr?.includes("إلى") ? "تقرير مبيعات الفترة" : "تقرير مبيعات اليوم"}</div>
+  <div class="subtitle">${data.shiftLabel}</div>
   ${sectionsHtml || '<div style="text-align:center;padding:12px;">لا توجد مبيعات مسجلة في هذه الفترة</div>'}
 </body>
 </html>`;
@@ -576,7 +535,7 @@ export function generateDailyFinancialSummaryHtml(data: DailyReportPayload): str
   </style>
 </head>
 <body>
-  <div class="title">تقرير مبيعات اليوم</div>
+  <div class="title">${data.dateStr?.includes("إلى") ? "تقرير مبيعات الفترة" : "تقرير مبيعات اليوم"}</div>
   <div style="text-align:center;font-size:11px;font-weight:800;margin-bottom:5px;">${data.shiftLabel}</div>
 
   <div class="box">

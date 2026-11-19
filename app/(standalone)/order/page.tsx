@@ -144,7 +144,7 @@ function formatQtyLabel(qty: number, unitType?: string) {
 
 function AbuAdelOrderInner() {
   const searchParams = useSearchParams();
-  const initialModeParam = (searchParams.get("mode") || "").toLowerCase();
+  const initialModeParam = (searchParams.get("mode") || searchParams.get("type") || "").toLowerCase();
 
   // 3 Pure Abu Adel Modes: DELIVERY | TAKEAWAY | PREORDER (NO DINE_IN!)
   const [mode, setMode] = useState<"DELIVERY" | "TAKEAWAY" | "PREORDER">(

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 360" width="360" height="360">
+  <defs>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b45309" />
+      <stop offset="35%" stop-color="#f59e0b" />
+      <stop offset="70%" stop-color="#d97706" />
+      <stop offset="100%" stop-color="#78350f" />
+    </linearGradient>
+    <linearGradient id="innerBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fffbeb" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="1" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="3" stdDeviation="4" flood-color="#000000" flood-opacity="0.12" />
+    </filter>
+  </defs>
+
+  <!-- Background Base Circle with subtle cream tone -->
+  <circle cx="180" cy="180" r="170" fill="url(#innerBg)" stroke="url(#goldGrad)" stroke-width="5" filter="url(#shadow)" />
+  
+  <!-- Outer Beaded/Dashed Ring -->
+  <circle cx="180" cy="180" r="158" fill="none" stroke="#d97706" stroke-width="1.8" stroke-dasharray="4 4" />
+  
+  <!-- Inner Ring -->
+  <circle cx="180" cy="180" r="150" fill="none" stroke="#b45309" stroke-width="1.2" />
+
+  <!-- Top Decorative Wheat & Crown Garland -->
+  <g transform="translate(180, 52)" fill="url(#goldGrad)">
+    <!-- Crown -->
+    <path d="M-22 18 L-28 0 L-10 8 L0 -8 L10 8 L28 0 L22 18 Z" />
+    <circle cx="-28" cy="-2" r="2.5" fill="#f59e0b" />
+    <circle cx="0" cy="-11" r="3.5" fill="#fef08a" />
+    <circle cx="28" cy="-2" r="2.5" fill="#f59e0b" />
+  </g>
+
+  <!-- Central Monogram Seal -->
+  <g transform="translate(180, 108)">
+    <circle cx="0" cy="0" r="28" fill="#fffdfa" stroke="url(#goldGrad)" stroke-width="2.5" />
+    <circle cx="0" cy="0" r="24" fill="none" stroke="#f59e0b" stroke-width="0.8" stroke-dasharray="2 2" />
+    <!-- Stylized Ampersand & Pastry Monogram -->
+    <path d="M-6 8 C-12 8 -15 3 -15 -3 C-15 -9 -9 -13 -3 -15 C-2 -18 -4 -21 -1 -23 C2 -25 7 -23 7 -19 C7 -15 3 -12 0 -11 C6 -7 11 -3 11 3 C11 10 5 15 -2 15 C-8 15 -12 12 -13 9 M-5 -3 C-5 3 -2 5 1 5 C5 5 8 2 8 -2 C8 -6 4 -9 -1 -11 C-4 -8 -5 -5 -5 -3 Z" 
+          fill="url(#goldGrad)" />
+  </g>
+
+  <!-- Brand Typography -->
+  <g text-anchor="middle">
+    <!-- English Name -->
+    <text x="180" y="172" font-family="'Cinzel', 'Times New Roman', Georgia, serif" font-weight="900" font-size="28" fill="#78350f" letter-spacing="4">
+      ABU ADEL
+    </text>
+
+    <!-- English Slogan -->
+    <text x="180" y="196" font-family="'Brush Script MT', 'Great Vibes', 'Palatino Linotype', cursive, serif" font-style="italic" font-weight="700" font-size="19" fill="#b45309" letter-spacing="1">
+      Haliy Youmak
+    </text>
+
+    <!-- Ornamental Divider -->
+    <g transform="translate(180, 212)" stroke="url(#goldGrad)" stroke-width="1.2">
+      <line x1="-70" y1="0" x2="-14" y2="0" />
+      <circle cx="0" cy="0" r="3" fill="#b45309" />
+      <line x1="14" y1="0" x2="70" y2="0" />
+    </g>
+
+    <!-- Arabic Brand Title -->
+    <text x="180" y="246" font-family="'Cairo', 'Tajawal', Arial, sans-serif" font-weight="900" font-size="23" fill="#78350f">
+      حلواني أبو عادل
+    </text>
+
+    <!-- Arabic Slogan & Heritage -->
+    <text x="180" y="272" font-family="'Cairo', 'Tajawal', Arial, sans-serif" font-weight="800" font-size="13" fill="#b45309">
+      ✨ احنا الحلو اللى بيحلو ✨
+    </text>
+
+    <text x="180" y="295" font-family="'Cairo', 'Tajawal', Arial, sans-serif" font-weight="700" font-size="10.5" fill="#92400e" letter-spacing="0.5">
+      أصل الحلويات الشرقية والغربية والتورت
+    </text>
+  </g>
+
+  <!-- Bottom Wheat Garland -->
+  <g transform="translate(180, 318)" fill="#b45309">
+    <ellipse cx="-30" cy="-6" rx="7" ry="2.5" transform="rotate(-20 -30 -6)" />
+    <ellipse cx="-16" cy="-4" rx="8" ry="2.8" transform="rotate(-10 -16 -4)" />
+    <circle cx="0" cy="-2" r="3" fill="#f59e0b" />
+    <ellipse cx="16" cy="-4" rx="8" ry="2.8" transform="rotate(10 16 -4)" />
+    <ellipse cx="30" cy="-6" rx="7" ry="2.5" transform="rotate(20 30 -6)" />
+  </g>
+</svg>

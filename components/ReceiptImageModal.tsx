@@ -320,18 +320,16 @@ export default function ReceiptImageModal({
             <div style={{ textAlign: "center", borderBottom: "2px solid #0f172a", paddingBottom: "10px", marginBottom: "10px" }}>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: "6px" }}>
                 <img
-                  src="/abuadel-receipt-logo.jpg"
+                  src="/abuadel-emblem.svg"
                   alt="Abu Adel Logo"
                   style={{
-                    width: "72px",
-                    height: "72px",
+                    width: "88px",
+                    height: "88px",
                     objectFit: "contain",
-                    borderRadius: "50%",
-                    border: "2px solid #b45309",
-                    padding: "2px",
+                    filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.08))",
                   }}
                   onError={(e: any) => {
-                    e.currentTarget.style.display = "none";
+                    e.currentTarget.src = "/abuadel-receipt-logo.png";
                   }}
                 />
               </div>

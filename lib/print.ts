@@ -22,10 +22,16 @@ export function printThermalHtml(html: string) {
       document.body.appendChild(iframe);
     }
 
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    let finalHtml = html;
+    if (origin && !html.includes("<base ")) {
+      finalHtml = html.replace("<head>", `<head><base href="${origin}/">`);
+    }
+
     const doc = iframe.contentWindow?.document;
     if (!doc) return;
     doc.open();
-    doc.write(html);
+    doc.write(finalHtml);
     doc.close();
 
     setTimeout(() => {
@@ -282,7 +288,7 @@ export function generateAbuAdelReceiptHtml(order: any, settings?: any): string {
 </head>
 <body>
   <div class="logo-wrap">
-    <img src="/abuadel-receipt-logo.jpg" alt="Abu Adel Logo" class="logo-img" onerror="this.style.display='none'" />
+    <img src="/abuadel-thermal-logo.png" alt="Abu Adel Logo" class="logo-img" style="max-width:85px;margin:0 auto 3px;" onerror="this.src='/abuadel-emblem.svg'" />
     <div class="brand-name">حلواني أبو عادل 🍰</div>
     <div class="slogan-tag">« ${slogan} »</div>
     <div class="sub-brand">Haliy Youmak • أصل الحلويات الشرقية والغربية والتورت</div>

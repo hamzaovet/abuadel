@@ -45,6 +45,7 @@ interface AdminLoyaltyCrmOffersPanelProps {
   initialCustomers: any[];
   onRefreshParent: () => void;
   addToast: (type: "success" | "error" | "info", message: string) => void;
+  defaultSubTab?: "rules" | "crm" | "offers";
 }
 
 export default function AdminLoyaltyCrmOffersPanel({
@@ -54,8 +55,15 @@ export default function AdminLoyaltyCrmOffersPanel({
   initialCustomers,
   onRefreshParent,
   addToast,
+  defaultSubTab,
 }: AdminLoyaltyCrmOffersPanelProps) {
-  const [subTab, setSubTab] = useState<"rules" | "crm" | "offers">("rules");
+  const [subTab, setSubTab] = useState<"rules" | "crm" | "offers">(defaultSubTab || "rules");
+
+  useEffect(() => {
+    if (defaultSubTab) {
+      setSubTab(defaultSubTab);
+    }
+  }, [defaultSubTab]);
 
   // ── 1. DYNAMIC LOYALTY CONFIG STATE ──
   const initialCfg = extractLoyaltyConfig(settings);

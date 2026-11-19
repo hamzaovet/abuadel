@@ -18,7 +18,9 @@ import {
   DollarSign,
   Send,
   MessageSquare,
+  Package,
 } from "lucide-react";
+import { printThermalHtml, generateDailyBriefPrintHtml } from "@/lib/print";
 
 interface AdminDailyAlertAndBriefModalProps {
   currentUser: any;
@@ -365,7 +367,7 @@ export default function AdminDailyAlertAndBriefModal({
       `────────────────────`,
       ...(lines.length > 0 ? lines : ["لا توجد أصناف مطلوبة لهذا اليوم."]),
       `────────────────────`,
-      `✅ تم الاعتماد على منظومة أبو عادل & سول ميت`,
+      `✅ تم الاعتماد عبر منظومة حلواني أبو عادل 🍰`,
     ].join("\n");
   };
 
@@ -493,11 +495,15 @@ export default function AdminDailyAlertAndBriefModal({
 
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={() => {
+                if (brief) {
+                  printThermalHtml(generateDailyBriefPrintHtml(brief, settings));
+                }
+              }}
               className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold flex items-center gap-1.5 border border-slate-700 cursor-pointer"
             >
               <Printer className="w-4 h-4" />
-              <span>طباعة</span>
+              <span>طباعة التقرير الحراري 80mm</span>
             </button>
 
             <button
@@ -676,11 +682,11 @@ export default function AdminDailyAlertAndBriefModal({
                 </div>
               </div>
 
-              {/* SECTION 2: SOULMATE RAW MATERIALS 21-DAY (3 WEEKS) LEAD TIME ALERTS */}
+              {/* SECTION 2: RAW MATERIALS LEAD TIME ALERTS */}
               <div className="space-y-2.5">
-                <h3 className="font-black text-sm text-rose-300 flex items-center gap-2">
-                  <Coffee className="w-4 h-4" />
-                  <span>2. إنذار خامات سول ميت ومهلة التوريد (خاصة الأكواب الكرتون قبلها بـ 3 أسابيع = 21 يوم)</span>
+                <h3 className="font-black text-sm text-amber-300 flex items-center gap-2">
+                  <Package className="w-4 h-4" />
+                  <span>2. إنذار خامات ومستلزمات الحلواني والتعبئة (مهلة التوريد وإعادة الطلب)</span>
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
                   {(brief?.rawMaterialAlerts || []).slice(0, 9).map((raw: any) => (

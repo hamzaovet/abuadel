@@ -20,6 +20,7 @@ import {
   generateSoulmateReceiptHtml,
   generateDailyItemsReportHtml,
   generateDailyFinancialSummaryHtml,
+  generateCombinedDailyReportHtml,
   type DailyReportPayload,
 } from "@/lib/print";
 
@@ -187,10 +188,7 @@ export default function DailyOrdersAndReportsModal({
 
   const handlePrintBoth = () => {
     if (!report) return;
-    printThermalHtml(generateDailyItemsReportHtml(report));
-    setTimeout(() => {
-      printThermalHtml(generateDailyFinancialSummaryHtml(report));
-    }, 1200);
+    printThermalHtml(generateCombinedDailyReportHtml(report));
   };
 
   const isViewingOtherShift =
@@ -207,7 +205,7 @@ export default function DailyOrdersAndReportsModal({
           <div>
             <h2 className="text-base md:text-lg font-black text-slate-900 dark:text-amber-50 flex items-center gap-2">
               <FileText className="w-5 h-5 text-amber-600 dark:text-amber-400" />
-              أوردرات اليوم وتقارير الورديات — Soulmate
+              أوردرات اليوم وتقارير الورديات — حلواني أبو عادل 🍰
             </h2>
             <p className="text-xs text-slate-500 dark:text-amber-200/60 mt-0.5">
               تقرير مطابق 100% للطباعة الحرارية 80mm • يدعم استخراج التقارير ليوم محدد أو فترة مخصصة بين تاريخين

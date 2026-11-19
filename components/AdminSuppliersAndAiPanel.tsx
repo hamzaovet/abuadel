@@ -21,6 +21,7 @@ import {
   KeyRound,
   AlertCircle,
 } from "lucide-react";
+import { printThermalHtml, generateSupplierStatementPrintHtml } from "@/lib/print";
 
 interface AdminSuppliersAndAiPanelProps {
   currentUser: any;
@@ -1046,114 +1047,15 @@ export default function AdminSuppliersAndAiPanel({
       {/* SUBTAB 1: OVERVIEW + SPIRAL INTER-BRAND DEBT SPLIT + SUPPLIER CARDS */}
       {subTab === "overview" && (
         <div className="space-y-6">
-          {/* THE SIGNATURE SPIRAL INTER-BRAND DEBT SPLIT CARD */}
-          {debtSplit && (
-            <div className="bg-gradient-to-br from-slate-900 via-[#1b1224] to-slate-900 border-2 border-amber-500/40 rounded-3xl p-5 shadow-2xl space-y-4">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-                <div>
-                  <div className="text-[11px] font-black text-amber-400 flex items-center gap-1.5">
-                    <ArrowRightLeft className="w-4 h-4" />
-                    <span>المؤشر المالي الذكي: تقسيم الدين الإجمالي بين المصنع وحلواني أبو عادل وسول ميت كافيه 🌀🔥</span>
-                  </div>
-                  <h3 className="text-lg font-black text-white mt-1">
-                    صافي توزيع مديونية المصنع على الفرعين (مقاصة التوريد البيني اللحظية)
-                  </h3>
-                </div>
-                <div className="text-left font-mono bg-black/50 border border-white/10 rounded-2xl px-4 py-2">
-                  <div className="text-[10px] text-slate-400">إجمالي مديونية المصنع (الخارجية على أبو عادل)</div>
-                  <div className="text-2xl font-black text-rose-400">
-                    {debtSplit.totalExternalFactoryDebt.toLocaleString()} <span className="text-xs">ج.م</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Share 1: Abu Adel Net Own Burden */}
-                <div className="bg-slate-950/80 border border-rose-500/35 rounded-2xl p-4 space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-rose-300">🍰 صافي نصيب حلواني أبو عادل وحده</span>
-                    <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 font-mono font-black">
-                      {debtSplit.abuAdelSharePct}%
-                    </span>
-                  </div>
-                  <div className="text-2xl font-black font-mono text-white">
-                    {debtSplit.abuAdelNetShareOfFactoryDebt.toLocaleString()} ج.م
-                  </div>
-                  <p className="text-[11px] text-slate-400">
-                    إجمالي دين المصنع ({debtSplit.totalExternalFactoryDebt.toLocaleString()} ج) مطروحاً منه مسحوبات سول ميت الآجلة (
-                    {debtSplit.soulmateCoveredShareOfFactoryDebt.toLocaleString()} ج).
-                  </p>
-                </div>
-
-                {/* Share 2: Soulmate's Share inside Factory Debt */}
-                <div className="bg-slate-950/80 border border-amber-500/35 rounded-2xl p-4 space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-amber-300">☕ نصيب سول ميت (مديونيته لأبو عادل)</span>
-                    <span className="px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono font-black">
-                      {debtSplit.soulmateSharePct}%
-                    </span>
-                  </div>
-                  <div className="text-2xl font-black font-mono text-amber-400">
-                    {debtSplit.soulmateDebtToAbuAdel.toLocaleString()} ج.م
-                  </div>
-                  <p className="text-[11px] text-slate-400">
-                    حلواني أبو عادل يورد حلويات سول ميت من مسحوبات المصنع؛ سداد سول ميت لهذا الجزء يغطي{" "}
-                    <strong className="text-emerald-300">{debtSplit.soulmateCoveredShareOfFactoryDebt.toLocaleString()} ج</strong> من فاتورة المصنع!
-                    {debtSplit.excessFromSoulmateToAbuAdel > 0 && (
-                      <span className="block text-emerald-400 font-bold mt-0.5">
-                        ✨ وفائض إضافي مستحق لأبو عادل: +{debtSplit.excessFromSoulmateToAbuAdel.toLocaleString()} ج.م!
-                      </span>
-                    )}
-                  </p>
-                </div>
-
-                {/* Share 3: External Raw Materials & Total Group */}
-                <div className="bg-slate-950/80 border border-sky-500/35 rounded-2xl p-4 space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="font-bold text-sky-300">📦 موردي الخامات والأكواب (سول ميت)</span>
-                    <span className="px-2 py-0.5 rounded-full bg-sky-500/20 text-sky-300 font-mono font-bold">خارجي</span>
-                  </div>
-                  <div className="text-2xl font-black font-mono text-sky-400">
-                    {debtSplit.totalRawMaterialSuppliersDebt.toLocaleString()} ج.م
-                  </div>
-                  <p className="text-[11px] text-slate-400">
-                    إجمالي التزام المجموعة بالكامل (مصنع + موردين خامات وأكواب):{" "}
-                    <strong className="text-white font-mono">{debtSplit.totalGroupExternalLiability.toLocaleString()} ج.م</strong>
-                  </p>
-                </div>
-              </div>
-
-              {/* Progress Split Bar */}
-              {debtSplit.totalExternalFactoryDebt > 0 && (
-                <div className="space-y-1">
-                  <div className="flex justify-between text-[11px] text-slate-300 font-bold">
-                    <span>نصيب سول ميت في تغطية دين المصنع ({debtSplit.soulmateSharePct}%)</span>
-                    <span>العبء الصافي المتبقي على أبو عادل ({debtSplit.abuAdelSharePct}%)</span>
-                  </div>
-                  <div className="w-full h-3 rounded-full bg-slate-950 border border-white/10 overflow-hidden flex">
-                    <div
-                      className="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all"
-                      style={{ width: `${debtSplit.soulmateSharePct}%` }}
-                    />
-                    <div
-                      className="h-full bg-gradient-to-r from-rose-600 to-rose-500 transition-all"
-                      style={{ width: `${debtSplit.abuAdelSharePct}%` }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Optional Future Markup Setting for Abu Adel -> Soulmate + Cloud Gemini Key */}
+          {/* Optional Markup Setting for External/Internal Supply + Cloud Gemini Key */}
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 grid grid-cols-1 lg:grid-cols-2 gap-4 items-end text-xs">
             <div className="space-y-2">
               <div className="font-black text-amber-300 flex items-center gap-1.5">
                 <ArrowRightLeft className="w-4 h-4" />
-                <span>تسعير توريد الحلويات من حلواني أبو عادل إلى سول ميت كافيه</span>
+                <span>تسعير توريد الحلويات للعملاء الخارجيين أو الجهات الشقيقة (سول ميت)</span>
               </div>
               <p className="text-[11px] text-slate-400">
-                الافتراضي: يتسلم سول ميت الحلويات بنفس سعر تكلفة المصنع بالضبط (0% هامش). يمكنك تفعيل إضافة هامش بسيط للزمن من هنا:
+                الافتراضي: التوريد بسعر تكلفة المصنع (0% هامش). يمكنك تفعيل إضافة هامش ربح اختياري عند التوريد للعملاء أو الجهات:
               </p>
               <div className="flex items-center gap-3 flex-wrap pt-1">
                 <label className="flex items-center gap-2 cursor-pointer bg-slate-950 border border-slate-700 rounded-xl px-3 py-2">
@@ -1163,7 +1065,7 @@ export default function AdminSuppliersAndAiPanel({
                     onChange={(e) => setMarkupEnabled(e.target.checked)}
                     className="accent-amber-500"
                   />
-                  <span className="font-bold text-white">تفعيل هامش بسيط على التحويل لسول ميت</span>
+                  <span className="font-bold text-white">تفعيل هامش ربح إضافي عند التوريد للعملاء</span>
                 </label>
                 {markupEnabled && (
                   <div className="flex items-center gap-1.5">
@@ -1360,20 +1262,8 @@ export default function AdminSuppliersAndAiPanel({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div>
-                <label className="block text-[11px] text-slate-400 mb-1 font-bold">نطاق المطابقة التلقائية في المخزن</label>
-                <select
-                  value={aiDomain}
-                  onChange={(e) => setAiDomain(e.target.value as any)}
-                  className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-white font-bold"
-                >
-                  <option value="ABU_ADEL_PRODUCTS">🍰 منتجات حلويات أبو عادل (المعمل / المصنع)</option>
-                  <option value="AUTO">🔍 تلقائي (بحث شامل في جميع الأصناف)</option>
-                </select>
-              </div>
-
-              <div className="md:col-span-2 flex flex-col justify-end">
+            <div className="text-xs">
+              <div className="flex flex-col justify-end">
                 <label className="block text-[11px] text-slate-400 mb-1 font-bold">
                   اختيار صور الفواتير أو كشوف الجرد (حتى 6 صور في المرة الواحدة)
                 </label>
@@ -1826,7 +1716,7 @@ export default function AdminSuppliersAndAiPanel({
           >
             <h3 className="font-black text-sm text-amber-300 flex items-center gap-2">
               <FileText className="w-4 h-4" />
-              <span>تسجيل فاتورة توريد يدوياً (مصنع / خامات / تحويل من أبو عادل لسول ميت)</span>
+              <span>تسجيل فاتورة توريد يدوياً (المصنع والموردين والخامات)</span>
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -2174,7 +2064,17 @@ export default function AdminSuppliersAndAiPanel({
 
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={() => {
+                if (statementData?.supplier) {
+                  printThermalHtml(
+                    generateSupplierStatementPrintHtml(
+                      statementData.supplier,
+                      statementData.transactions || [],
+                      settings
+                    )
+                  );
+                }
+              }}
               className="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-black flex items-center gap-1.5 cursor-pointer"
             >
               <Printer className="w-4 h-4" />

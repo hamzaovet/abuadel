@@ -15,6 +15,7 @@ import ShiftGateModal, {
   type ActiveShiftInfo,
 } from "@/components/ShiftGateModal";
 import DailyOrdersAndReportsModal from "@/components/DailyOrdersAndReportsModal";
+import ReceiptImageModal from "@/components/ReceiptImageModal";
 import { printThermalHtml, generateSoulmateReceiptHtml } from "@/lib/print";
 import {
   registerAudioUnlockListeners,
@@ -73,6 +74,7 @@ import {
   MapPin,
   Truck,
   MessageCircle,
+  Bike,
   Send,
   Phone,
   User,
@@ -307,6 +309,8 @@ export default function PosTerminalPage() {
 
   // Completed Printed Receipt & Order Revision Modal
   const [lastPrintedOrder, setLastPrintedOrder] = useState<any>(null);
+  const [whatsappReceiptOrder, setWhatsappReceiptOrder] = useState<any>(null);
+  const [posDriverId, setPosDriverId] = useState<string>("");
   const [settlingOrder, setSettlingOrder] = useState<boolean>(false);
   const [revisionTargetOrder, setRevisionTargetOrder] = useState<any>(null);
   const [revisionModalMode, setRevisionModalMode] = useState<RevisionModalMode>(null);
@@ -928,6 +932,7 @@ export default function PosTerminalPage() {
         }
       } else {
         // Direct Walk-In or Quick Takeaway / Delivery / Retail Order
+        const pickedPosDriver = drivers.find((d) => d.id === posDriverId);
         const res = await fetch("/api/orders", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -946,6 +951,9 @@ export default function PosTerminalPage() {
             deliveryZoneId: orderType === "DELIVERY" && selectedDeliveryZone ? selectedDeliveryZone.id : null,
             deliveryZoneName: orderType === "DELIVERY" && selectedDeliveryZone ? selectedDeliveryZone.nameAr : null,
             deliveryFee,
+            driverId: orderType === "DELIVERY" && pickedPosDriver ? pickedPosDriver.id : null,
+            driverName: orderType === "DELIVERY" && pickedPosDriver ? pickedPosDriver.name : null,
+            driverPhone: orderType === "DELIVERY" && pickedPosDriver ? pickedPosDriver.phone : null,
             cashierName: currentUser?.name || "كاشير المنظومة",
             discountAmount,
             tipAmount,
@@ -980,6 +988,7 @@ export default function PosTerminalPage() {
             setCustomerName("");
             setCustomerPhone("");
             setDeliveryAddress("");
+            setPosDriverId("");
             setDiscountAmount(0);
             setTipAmount(0);
             const earned = Number(settleData.pointsEarned || data.pointsEarned || settleData.order?.pointsEarned || 0);
@@ -1954,6 +1963,25 @@ export default function PosTerminalPage() {
                       className="w-full py-1.5 px-2 rounded-lg bg-black/60 border border-white/10 text-white text-xs outline-none focus:border-sky-400 font-bold"
                     />
                   </div>
+
+                  <div>
+                    <label className="text-[10px] text-amber-300 block mb-0.5 font-bold flex items-center gap-1">
+                      <Bike className="w-3 h-3 text-amber-400" />
+                      <span>مندوب / طيار التوصيل (اختياري عند فتح الطلب):</span>
+                    </label>
+                    <select
+                      value={posDriverId}
+                      onChange={(e) => setPosDriverId(e.target.value)}
+                      className="w-full py-1.5 px-2 rounded-lg bg-black/80 border border-amber-500/40 text-white text-xs font-bold outline-none focus:border-amber-400 cursor-pointer"
+                    >
+                      <option value="">-- بدون تعيين طيار الآن (يتم تعيينه لاحقاً) --</option>
+                      {drivers.filter((d) => d.isActive).map((d) => (
+                        <option key={d.id} value={d.id}>
+                          🛵 {d.name} ({d.phone}) {d.vehicleInfo ? `• ${d.vehicleInfo}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
                 </div>
               </div>
             )}
@@ -2276,6 +2304,33 @@ export default function PosTerminalPage() {
                   {calculatedFinal} ج.م
                 </span>
               </div>
+
+              {lastPrintedOrder && cart.length === 0 && (
+                <div className="p-2 rounded-xl bg-slate-900 border border-emerald-500/40 flex items-center justify-between gap-2 text-xs">
+                  <div className="flex items-center gap-1.5 text-emerald-300 font-bold truncate">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="truncate">طلب #{lastPrintedOrder.orderNumber} ({lastPrintedOrder.finalAmount} ج)</span>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setWhatsappReceiptOrder(lastPrintedOrder)}
+                      className="px-2.5 py-1 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black flex items-center gap-1 shadow cursor-pointer text-[11px]"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5" />
+                      <span>واتساب 📱</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => printThermalHtml(generateSoulmateReceiptHtml(lastPrintedOrder, settings))}
+                      className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold flex items-center gap-1 cursor-pointer text-[11px]"
+                      title="إعادة طباعة البون"
+                    >
+                      <Printer className="w-3.5 h-3.5 text-amber-400" />
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-1.5 pt-1">
                 {cart.length > 0 && (
@@ -3738,6 +3793,15 @@ export default function PosTerminalPage() {
                           >
                             <Printer className="w-4 h-4" />
                           </button>
+
+                          <button
+                            type="button"
+                            onClick={() => setWhatsappReceiptOrder(o)}
+                            className="p-2 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 cursor-pointer"
+                            title="إرسال صورة الفاتورة لواتساب العميل 📱"
+                          >
+                            <MessageCircle className="w-4 h-4" />
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -4118,6 +4182,14 @@ export default function PosTerminalPage() {
         settings={settings}
         defaultTab={dailyReportsDefaultTab}
         activeShiftCode={activeShift?.shiftCode || "SHIFT_1"}
+      />
+
+      {/* WhatsApp Receipt as High-Res Image Modal */}
+      <ReceiptImageModal
+        open={Boolean(whatsappReceiptOrder)}
+        onClose={() => setWhatsappReceiptOrder(null)}
+        order={whatsappReceiptOrder}
+        settings={settings}
       />
     </div>
   );

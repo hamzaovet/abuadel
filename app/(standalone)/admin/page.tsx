@@ -9,6 +9,8 @@ import AdminDailyAlertAndBriefModal from "@/components/AdminDailyAlertAndBriefMo
 import AdminSuppliersAndAiPanel from "@/components/AdminSuppliersAndAiPanel";
 import AdminAuditAlertsDrawer from "@/components/AdminAuditAlertsDrawer";
 import AdminBulkRawPriceEditor from "@/components/AdminBulkRawPriceEditor";
+import AdminDriversPanel from "@/components/AdminDriversPanel";
+import ReceiptImageModal from "@/components/ReceiptImageModal";
 import OrderRevisionModals, { RevisionModalMode } from "@/components/OrderRevisionModals";
 import { PushOptInButton } from "@/components/PwaBootAndPushButton";
 import { ThemeToggle } from "@/components/ThemeProviderAndToggle";
@@ -65,6 +67,7 @@ import {
   PartyPopper,
   MessageCircle,
   Truck,
+  Bike,
   Upload,
   Image as ImageIcon,
   History,
@@ -186,7 +189,9 @@ export default function AdminDashboardPage() {
     | "recipes"
     | "pastry"
     | "orders"
+    | "drivers"
     | "reservations"
+    | "customers"
     | "chat"
     | "loyalty"
     | "suppliers"
@@ -203,6 +208,7 @@ export default function AdminDashboardPage() {
   const [editingRawLeadMap, setEditingRawLeadMap] = useState<
     Record<string, { leadTimeDays: string; minStockAlert: string; avgDailyUsage: string }>
   >({});
+  const [whatsappReceiptOrder, setWhatsappReceiptOrder] = useState<any>(null);
 
   // Users Management state (Maestro & GM)
   const [usersList, setUsersList] = useState<any[]>(initialCache?.usersList || []);
@@ -2579,6 +2585,18 @@ export default function AdminDashboardPage() {
                   <span>سجل الطلبات والدليفري</span>
                 </button>
 
+                <button
+                  onClick={() => setActiveTab("drivers")}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                    activeTab === "drivers"
+                      ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  }`}
+                >
+                  <Bike className="w-4 h-4" />
+                  <span>مناديب التوصيل 🛵</span>
+                </button>
+
                 {/* Sweet Pre-Order Reservations (Delivery OR Branch Pickup by Date!) */}
                 <button
                   onClick={() => setActiveTab("reservations")}
@@ -2590,6 +2608,18 @@ export default function AdminDashboardPage() {
                 >
                   <Calendar className="w-4 h-4" />
                   <span>حجوزات الحلويات بموعد مسبق 🎂 ({scheduledPreOrders.length})</span>
+                </button>
+
+                <button
+                  onClick={() => setActiveTab("customers")}
+                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition whitespace-nowrap ${
+                    activeTab === "customers"
+                      ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                      : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+                  }`}
+                >
+                  <Users className="w-4 h-4" />
+                  <span>قاعدة بيانات العملاء (CRM) 👥</span>
                 </button>
 
                 <button
@@ -3086,45 +3116,19 @@ export default function AdminDashboardPage() {
                     </button>
                   </div>
 
-                  {/* Outlet Selector (Maestro has dropdown, Branch Managers are locked to their branch) */}
-                  {isOwner ? (
-                    <select
-                      value={reportOutletFilter}
-                      onChange={(e) => setReportOutletFilter(e.target.value)}
-                      className="bg-slate-950 border border-slate-800 text-slate-200 text-xs rounded-xl px-3 py-1.5 font-bold focus:border-amber-500 focus:outline-none cursor-pointer"
-                    >
-                      <option value="ALL">🌟 كافة الفروع (مجمّع)</option>
-                      {outlets.map((ot) => (
-                        <option key={ot.id} value={ot.id}>
-                          {ot.code === "SOULMATE_CAFE" ? "☕ " : "🍰 "}
-                          {ot.name}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <div className="bg-slate-950 border border-slate-800 text-amber-400 text-xs rounded-xl px-3 py-1.5 font-black flex items-center gap-1.5">
-                      {isUserSoulmate ? "☕ سول ميت كافيه VIP" : "🍰 حلواني أبو عادل"}
-                    </div>
-                  )}
+                  {/* Single Outlet Badge (Abu Adel - No Branches) */}
+                  <div className="bg-slate-950 border border-slate-800 text-amber-400 text-xs rounded-xl px-3 py-1.5 font-black flex items-center gap-1.5">
+                    🍰 حلواني أبو عادل (المقر الرئيسي)
+                  </div>
 
                   {/* Export CSV Button */}
                   <button
                     onClick={handleExportFinancialCSV}
-                    className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow-md transition"
+                    className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-xs shadow-md transition cursor-pointer"
                     title="تصدير شيت إكسل CSV مالي متكامل مع دعم اللغة العربية"
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span className="hidden sm:inline">إكسل CSV</span>
-                  </button>
-
-                  {/* Print Report Button */}
-                  <button
-                    onClick={() => window.print()}
-                    className="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-xl text-xs border border-slate-700 shadow-md transition"
-                    title="طباعة التقرير المالي الحالي"
-                  >
-                    <Printer className="w-3.5 h-3.5 text-amber-400" />
-                    <span className="hidden sm:inline">طباعة</span>
                   </button>
                 </div>
               </div>
@@ -6828,6 +6832,14 @@ export default function AdminDashboardPage() {
                                 >
                                   <Printer className="w-4 h-4" />
                                 </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setWhatsappReceiptOrder(o)}
+                                  className="p-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 transition cursor-pointer"
+                                  title="إرسال صورة الفاتورة لواتساب العميل 📱"
+                                >
+                                  <MessageCircle className="w-4 h-4" />
+                                </button>
                               </div>
                             </td>
                           </tr>
@@ -7263,6 +7275,50 @@ export default function AdminDashboardPage() {
           />
         )}
 
+        {/* TAB: DEDICATED CUSTOMERS CRM DATABASE */}
+        {activeTab === "customers" && (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-amber-500/15 via-slate-900 to-transparent p-4 rounded-3xl border border-amber-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-black text-lg">
+                  👥
+                </div>
+                <div>
+                  <h2 className="text-base font-black text-white">قاعدة بيانات العملاء الشاملة (CRM & الدعاية)</h2>
+                  <p className="text-xs text-slate-400">سجل العملاء، أرقام الموبايل، العناوين، نقاط الولاء، وسجل الطلبات السابقة مع إمكانية المراسلة والتصدير لإكسل</p>
+                </div>
+              </div>
+            </div>
+            <AdminLoyaltyCrmOffersPanel
+              settings={settings}
+              setSettings={setSettings}
+              menuItems={menuItems}
+              initialCustomers={customers}
+              onRefreshParent={fetchDashboardData}
+              addToast={addToast}
+              defaultSubTab="crm"
+            />
+          </div>
+        )}
+
+        {/* TAB: DELIVERY DRIVERS MANAGEMENT */}
+        {activeTab === "drivers" && (
+          <div className="space-y-6">
+            <div className="bg-gradient-to-r from-sky-500/15 via-slate-900 to-transparent p-4 rounded-3xl border border-sky-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 font-black text-lg">
+                  🛵
+                </div>
+                <div>
+                  <h2 className="text-base font-black text-white">إدارة مناديب وطيارين التوصيل وحسابات الدليفري</h2>
+                  <p className="text-xs text-slate-400">إضافة وتعديل بيانات الطيارين، تتبع الرحلات اللحظية، ومتابعة رسوم التوصيل المفصولة عن إيراد المحل</p>
+                </div>
+              </div>
+            </div>
+            <AdminDriversPanel currentUser={currentUser} settings={settings} />
+          </div>
+        )}
+
         {/* TAB 9: FACTORY, SUPPLIERS LEDGER & PURCHASES (ALLOWED FOR OWNER, BRANCH MANAGER & CASHIER!) */}
         {activeTab === "suppliers" && (isOwner || isBranchManager || currentUser?.role === "cashier") && (
           <AdminSuppliersAndAiPanel
@@ -7500,6 +7556,21 @@ export default function AdminDashboardPage() {
                         setSettings({ ...settings, brandNameAr: e.target.value })
                       }
                       className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs text-slate-400 mb-1.5">
+                      الجملة الترويجية (السلوجان — يظهر بالريسيت الحراري) ✨
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="احنا الحلو اللى بيحلو"
+                      value={settings.slogan || "احنا الحلو اللى بيحلو"}
+                      onChange={(e) =>
+                        setSettings({ ...settings, slogan: e.target.value })
+                      }
+                      className="w-full bg-slate-950 border border-amber-500/40 rounded-xl px-3 py-2 text-xs text-amber-300 focus:outline-none focus:border-amber-400 font-bold"
                     />
                   </div>
 
@@ -9426,6 +9497,14 @@ export default function AdminDashboardPage() {
         onClose={() => setShowDailyReportsModal(false)}
         settings={settings}
         defaultTab="REPORTS"
+      />
+
+      {/* WhatsApp Receipt as High-Res Image Modal */}
+      <ReceiptImageModal
+        open={Boolean(whatsappReceiptOrder)}
+        onClose={() => setWhatsappReceiptOrder(null)}
+        order={whatsappReceiptOrder}
+        settings={settings}
       />
 
       {/* FLOATING TOAST NOTIFICATIONS */}

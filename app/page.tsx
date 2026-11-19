@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { Bike, CalendarClock, Lock, Monitor, Sparkles, Zap, ArrowLeft } from "lucide-react";
 import PwaInstallButton from "@/components/PwaInstallButton";
+import { ThemeToggle } from "@/components/ThemeProviderAndToggle";
 
 export default function AbuAdelHomePage() {
   return (
@@ -15,11 +16,23 @@ export default function AbuAdelHomePage() {
       <div className="pointer-events-none absolute -top-24 -right-24 w-96 h-96 rounded-full bg-rose-600/15 blur-[140px]" />
       <div className="pointer-events-none absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-amber-500/15 blur-[140px]" />
 
+      {/* Top Floating Control Bar (Theme Toggle) */}
+      <div className="relative z-20 w-full max-w-4xl flex items-center justify-between px-3 mb-2">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/50 text-amber-300 text-xs font-black shadow-sm">
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>منظومة حلواني أبو عادل 🍰</span>
+        </div>
+        <ThemeToggle compact />
+      </div>
+
       <div className="relative z-10 w-full max-w-4xl rounded-[2.5rem] border-2 border-amber-500/35 bg-[#14080e]/95 backdrop-blur-xl p-6 sm:p-10 shadow-2xl space-y-7 text-center">
         {/* Brand Emblem */}
         <div className="space-y-3">
           <div className="w-24 h-24 mx-auto rounded-full p-1 bg-gradient-to-tr from-amber-400 via-amber-600 to-rose-700 shadow-2xl">
-            <div className="w-full h-full rounded-full bg-[#12080f] overflow-hidden flex items-center justify-center p-2 border-2 border-amber-400/50">
+            <div
+              data-force-dark="true"
+              className="w-full h-full rounded-full bg-[#12080f] overflow-hidden flex items-center justify-center p-2 border-2 border-amber-400/50"
+            >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/abuadel-emblem.svg"

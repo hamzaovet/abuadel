@@ -31,6 +31,7 @@ import {
   Clock,
 } from "lucide-react";
 import { getCategoryLabel } from "@/lib/categories";
+import { ThemeToggle } from "@/components/ThemeProviderAndToggle";
 import {
   registerAudioUnlockListeners,
   playCustomerUpdateChime,
@@ -923,6 +924,7 @@ function AbuAdelOrderInner() {
                 className="w-full pr-9 pl-3 py-2 rounded-xl bg-black/50 border border-white/10 text-xs text-amber-50 placeholder:text-white/35 focus:outline-none focus:border-amber-400"
               />
             </div>
+            <ThemeToggle compact />
             <Link
               href="/"
               className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-amber-200"

@@ -171,6 +171,55 @@ html.light :is(.bg-black\/50, .bg-black\/55, .bg-black\/60, .bg-black\/70, .bg-b
   background-color: #f1f5f9;
 }
 
+/* Custom Abu Adel Dark Surfaces -> Crisp Daylight Mode Surfaces */
+html.light :is(
+  .bg-\[\#07070a\],
+  .bg-\[\#0d070b\],
+  .bg-\[\#0d070a\],
+  .bg-\[\#060a14\],
+  .bg-\[\#07070b\]
+) {
+  background-color: #f8fafc;
+}
+
+html.light :is(
+  .bg-\[\#14080e\],
+  .bg-\[\#14080e\]\/95,
+  .bg-\[\#120d14\]\/95,
+  .bg-\[\#160c11\]\/95,
+  .bg-\[\#160c11\],
+  .bg-\[\#120d14\],
+  .bg-\[\#110c14\],
+  .bg-\[\#140e16\],
+  .bg-\[\#160b12\],
+  .bg-\[\#0d0910\]\/95
+) {
+  background-color: #ffffff;
+}
+
+/* Tinted Action Cards in Daylight Mode (Pure white with distinct soft pastels) */
+html.light :is(.bg-\[\#1a0c14\]) {
+  background-color: #fff1f2;
+}
+html.light :is(.bg-\[\#1b120c\], .bg-\[\#1a120a\]) {
+  background-color: #fffbeb;
+}
+html.light :is(.bg-\[\#170e1c\], .bg-\[\#18121c\]) {
+  background-color: #faf5ff;
+}
+html.light :is(.bg-\[\#0e1c15\], .bg-\[\#0f1a12\]) {
+  background-color: #ecfdf5;
+}
+html.light :is(.bg-\[\#0d1620\]) {
+  background-color: #f0f9ff;
+}
+html.light :is(.bg-\[\#1b1017\]) {
+  background-color: #ffffff;
+}
+html.light :is(.bg-\[\#190d13\], .bg-\[\#180d12\], .bg-\[\#1d111b\]) {
+  background-color: #f8fafc;
+}
+
 /* Non-receipt plain bg-black inputs/tracks turn crisp soft surface */
 html.light .bg-black {
   background-color: #f1f5f9;
@@ -361,6 +410,18 @@ html.light .hover\:text-white:hover {
 html.light :is(.hover\:bg-rose-500, .hover\:bg-rose-600, .hover\:bg-emerald-600, .hover\:bg-emerald-500, .hover\:bg-purple-600, .hover\:bg-sky-500, .hover\:bg-blue-500):hover.hover\:text-white:hover {
   color: #ffffff;
 }
+html.light .group:hover .group-hover\:text-rose-200 {
+  color: #be123c;
+}
+html.light .group:hover .group-hover\:text-amber-200 {
+  color: #b45309;
+}
+html.light .group:hover .group-hover\:text-emerald-200 {
+  color: #047857;
+}
+html.light .group:hover .group-hover\:text-purple-200 {
+  color: #6b21a8;
+}
 
 /* 6. Solid Action Buttons, Badges & Gradient CTA Protection (ALWAYS keep text crisp WHITE) */
 html.light :is(
@@ -432,63 +493,73 @@ html.light button:disabled[class*="bg-sky-"] {
 
 /* 7. Forced-Dark Containers (Photo Overlays, Logo Badges, Luxury VIP Print Card Preview) */
 html.light [data-force-dark="true"] {
-  color: #f8fafc;
+  color: #f8fafc !important;
 }
 html.light [data-force-dark="true"].bg-black,
 html.light [data-force-dark="true"] .bg-black {
-  background-color: #000000;
+  background-color: #000000 !important;
 }
 html.light [data-force-dark="true"].bg-slate-900,
 html.light [data-force-dark="true"] .bg-slate-900 {
-  background-color: #0f172a;
+  background-color: #0f172a !important;
+}
+html.light [data-force-dark="true"]:is(.bg-\[\#14080e\], .bg-\[\#12080f\], .bg-\[\#11050b\], .bg-\[\#1f0a14\]),
+html.light [data-force-dark="true"] :is(.bg-\[\#14080e\], .bg-\[\#12080f\], .bg-\[\#11050b\], .bg-\[\#1f0a14\]) {
+  background-color: #14080e !important;
 }
 html.light [data-force-dark="true"] .bg-black\/80 {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 0.8) !important;
 }
 html.light [data-force-dark="true"] .from-black\/95 {
-  --tw-gradient-from: rgba(0, 0, 0, 0.95);
+  --tw-gradient-from: rgba(0, 0, 0, 0.95) !important;
 }
 html.light [data-force-dark="true"] .from-black\/90 {
-  --tw-gradient-from: rgba(0, 0, 0, 0.9);
+  --tw-gradient-from: rgba(0, 0, 0, 0.9) !important;
+}
+html.light [data-force-dark="true"] :is(.from-rose-950) {
+  --tw-gradient-from: #4c0519 !important;
+}
+html.light [data-force-dark="true"] :is(.via-\[\#1f0a14\]) {
+  --tw-gradient-via: #1f0a14 !important;
+}
+html.light [data-force-dark="true"] :is(.to-amber-950) {
+  --tw-gradient-to: #451a03 !important;
 }
 html.light [data-force-dark="true"] :is(.from-\[\#1a1209\]) {
-  --tw-gradient-from: #1a1209;
+  --tw-gradient-from: #1a1209 !important;
 }
 html.light [data-force-dark="true"] :is(.via-\[\#0d0905\]) {
-  --tw-gradient-via: #0d0905;
+  --tw-gradient-via: #0d0905 !important;
 }
 html.light [data-force-dark="true"] :is(.to-\[\#12080a\]) {
-  --tw-gradient-to: #12080a;
+  --tw-gradient-to: #12080a !important;
 }
-html.light [data-force-dark="true"] .text-white {
-  color: #ffffff;
+html.light [data-force-dark="true"] :is(.text-white, .text-slate-100, .text-amber-50, .text-amber-100) {
+  color: #ffffff !important;
 }
 html.light [data-force-dark="true"] .text-slate-200 {
-  color: #e2e8f0;
+  color: #e2e8f0 !important;
 }
 html.light [data-force-dark="true"] .text-slate-300 {
-  color: #cbd5e1;
+  color: #cbd5e1 !important;
 }
-html.light [data-force-dark="true"] .text-slate-400 {
-  color: #94a3b8;
+html.light [data-force-dark="true"] :is(.text-slate-400, .text-slate-500) {
+  color: #94a3b8 !important;
 }
-html.light [data-force-dark="true"] .text-amber-300 {
-  color: #fcd34d;
+html.light [data-force-dark="true"] :is(.text-amber-200, .text-amber-300) {
+  color: #fcd34d !important;
 }
-html.light [data-force-dark="true"] .text-amber-400 {
-  color: #fbbf24;
+html.light [data-force-dark="true"] :is(.text-amber-400, .text-amber-500) {
+  color: #fbbf24 !important;
 }
-html.light [data-force-dark="true"] .text-emerald-300 {
-  color: #6ee7b7;
+html.light [data-force-dark="true"] :is(.text-rose-200, .text-rose-300, .text-rose-400) {
+  color: #fda4af !important;
 }
-html.light [data-force-dark="true"] .text-emerald-400 {
-  color: #34d399;
+html.light [data-force-dark="true"] :is(.text-emerald-200, .text-emerald-300, .text-emerald-400) {
+  color: #6ee7b7 !important;
 }
-html.light [data-force-dark="true"] .text-purple-300 {
-  color: #d8b4fe;
-}
-html.light [data-force-dark="true"] .text-purple-400 {
-  color: #c084fc;
+html.light [data-force-dark="true"] :is(.text-purple-200, .text-purple-300, .text-purple-400) {
+  color: #d8b4fe !important;
 }
 
 /* 8. Thermal Receipts Always Stay Pure Black Ink on White Paper */

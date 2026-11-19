@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { X, Printer, QrCode, Copy, Check, ExternalLink, Sparkles } from "lucide-react";
+import { ABU_ADEL_GOLD_EMBLEM_BASE64 } from "@/lib/brandLogoBase64";
 
 interface CardQRModalProps {
   isOpen: boolean;
@@ -180,7 +181,7 @@ export default function CardQRModal({
 <body>
   <div class="card">
     <div class="emblem-wrapper">
-      <img src="${origin}/abuadel-emblem.svg" alt="أبو عادل" onerror="this.src='${origin}/abuadel-receipt-logo.png'" />
+      <img src="${ABU_ADEL_GOLD_EMBLEM_BASE64}" alt="حلواني أبو عادل" />
     </div>
     <h1 class="brand">حلواني أبو عادل</h1>
     <div class="slogan">« احنا الحلو اللى بيحلو ✨ »</div>
@@ -219,7 +220,10 @@ export default function CardQRModal({
       dir="rtl"
       className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-150"
     >
-      <div className="w-full max-w-md rounded-3xl bg-[#14080e] border-2 border-amber-400 text-white shadow-2xl overflow-hidden">
+      <div
+        data-force-dark="true"
+        className="w-full max-w-md rounded-3xl bg-[#14080e] border-2 border-amber-400 text-white shadow-2xl overflow-hidden"
+      >
         {/* Header (High Contrast) */}
         <div className="px-5 py-4 border-b-2 border-amber-400/40 flex items-center justify-between bg-gradient-to-r from-rose-950 via-[#1f0a14] to-amber-950">
           <div className="flex items-center gap-2.5">

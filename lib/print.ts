@@ -5,6 +5,8 @@
  * With zero margin-clipping, embedded Abu Adel emblem, and single-dialog combined reporting.
  */
 
+import { ABU_ADEL_RECEIPT_LOGO_BASE64 } from "@/lib/brandLogoBase64";
+
 export function printThermalHtml(html: string) {
   if (typeof window === "undefined") return;
   try {
@@ -288,7 +290,7 @@ export function generateAbuAdelReceiptHtml(order: any, settings?: any): string {
 </head>
 <body>
   <div class="logo-wrap">
-    <img src="/abuadel-thermal-logo.png" alt="Abu Adel Logo" class="logo-img" style="max-width:85px;margin:0 auto 3px;" onerror="this.src='/abuadel-emblem.svg'" />
+    <img src="${ABU_ADEL_RECEIPT_LOGO_BASE64}" alt="Abu Adel Logo" class="logo-img" style="max-width:85px;margin:0 auto 3px;" />
     <div class="brand-name">حلواني أبو عادل 🍰</div>
     <div class="slogan-tag">« ${slogan} »</div>
     <div class="sub-brand">Haliy Youmak • أصل الحلويات الشرقية والغربية والتورت</div>

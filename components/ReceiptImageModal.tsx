@@ -17,6 +17,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { printThermalHtml, generateAbuAdelReceiptHtml } from "@/lib/print";
+import { ABU_ADEL_GOLD_EMBLEM_BASE64 } from "@/lib/brandLogoBase64";
 
 interface ReceiptImageModalProps {
   open: boolean;
@@ -84,6 +85,7 @@ export default function ReceiptImageModal({
     const canvas = await html2canvas(receiptRef.current, {
       scale: 2.5,
       useCORS: true,
+      allowTaint: true,
       backgroundColor: "#ffffff",
       logging: false,
     });
@@ -319,18 +321,19 @@ export default function ReceiptImageModal({
             {/* Header: Logo & Store Info */}
             <div style={{ textAlign: "center", borderBottom: "2px solid #0f172a", paddingBottom: "10px", marginBottom: "10px" }}>
               <div style={{ display: "flex", justifyContent: "center", marginBottom: "6px" }}>
+                {/* Embedded Base64 Gold Emblem (Guarantees 100% offline & canvas rasterization in PNG downloads) */}
                 <img
-                  src="/abuadel-emblem.svg"
-                  alt="Abu Adel Logo"
+                  src={ABU_ADEL_GOLD_EMBLEM_BASE64}
+                  alt="حلواني أبو عادل"
                   style={{
                     width: "88px",
                     height: "88px",
                     objectFit: "contain",
                     filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.08))",
+                    display: "block",
+                    margin: "0 auto",
                   }}
-                  onError={(e: any) => {
-                    e.currentTarget.src = "/abuadel-receipt-logo.png";
-                  }}
+                  crossOrigin="anonymous"
                 />
               </div>
               <h1 style={{ margin: "2px 0 0 0", fontSize: "19px", fontWeight: 900, color: "#b45309" }}>

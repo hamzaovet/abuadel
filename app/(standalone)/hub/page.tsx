@@ -21,6 +21,7 @@ import {
   ChevronLeft,
 } from "lucide-react";
 import PwaInstallButton from "@/components/PwaInstallButton";
+import { ThemeToggle } from "@/components/ThemeProviderAndToggle";
 
 const OFFICIAL_FACEBOOK_URL =
   "https://www.facebook.com/p/%D9%85%D9%86%D9%81%D8%B0-%D8%A8%D9%8A%D8%B9-%D8%AD%D9%84%D9%88%D8%A7%D9%86%D9%89-%D8%A3%D8%A8%D9%88-%D8%B9%D8%A7%D8%AF%D9%84-%D8%A8%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9-%D8%AD%D8%AF%D8%A7%D8%A6%D9%82-%D8%A7%D9%84%D9%82%D8%A8%D8%A9--100078679611752/";
@@ -135,24 +136,27 @@ export default function AbuAdelSmartHubPage() {
             <span>الرابط الذكي الموحد</span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleShare}
-            className="py-1 px-3.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow"
-            title="مشاركة الرابط"
-          >
-            {shareSuccess ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="text-emerald-300 font-black">تم النسخ!</span>
-              </>
-            ) : (
-              <>
-                <Share2 className="w-3.5 h-3.5 text-amber-300" />
-                <span>مشاركة</span>
-              </>
-            )}
-          </button>
+          <div className="flex items-center gap-2">
+            <ThemeToggle compact />
+            <button
+              type="button"
+              onClick={handleShare}
+              className="py-1 px-3.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/25 text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer shadow"
+              title="مشاركة الرابط"
+            >
+              {shareSuccess ? (
+                <>
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  <span className="text-emerald-300 font-black">تم النسخ!</span>
+                </>
+              ) : (
+                <>
+                  <Share2 className="w-3.5 h-3.5 text-amber-300" />
+                  <span>مشاركة</span>
+                </>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Brand Header */}
@@ -161,7 +165,10 @@ export default function AbuAdelSmartHubPage() {
           <div className="relative group">
             <div className="absolute inset-0 rounded-full bg-amber-500/30 blur-xl opacity-75 group-hover:opacity-100 transition duration-500" />
             <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full p-1 bg-gradient-to-tr from-amber-400 via-amber-600 to-rose-700 shadow-2xl">
-              <div className="w-full h-full rounded-full bg-[#12080f] overflow-hidden flex items-center justify-center p-2 border-2 border-amber-400/50">
+              <div
+                data-force-dark="true"
+                className="w-full h-full rounded-full bg-[#12080f] overflow-hidden flex items-center justify-center p-2 border-2 border-amber-400/50"
+              >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/abuadel-emblem.svg"

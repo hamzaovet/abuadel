@@ -42,6 +42,7 @@ import {
   Coffee,
   Cake,
   LayoutGrid,
+  Columns,
   Plus,
   Minus,
   Trash2,
@@ -218,6 +219,29 @@ export default function PosTerminalPage() {
   const [lastDailyClose, setLastDailyClose] = useState<any>(null);
   const [closingDaily, setClosingDaily] = useState<boolean>(false);
   const [mobilePane, setMobilePane] = useState<"MENU" | "CART">("MENU");
+  const [forceSplitLayout, setForceSplitLayout] = useState<boolean>(true);
+
+  // Sync / Load Split Layout Preference (Defaults to true on desktop & POS terminal monitors >= 640px)
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("abuadel_pos_split_layout");
+      if (saved !== null) {
+        setForceSplitLayout(saved === "true");
+      } else {
+        setForceSplitLayout(typeof window !== "undefined" ? window.innerWidth >= 640 : true);
+      }
+    } catch {
+      setForceSplitLayout(true);
+    }
+  }, []);
+
+  const toggleSplitLayout = () => {
+    const next = !forceSplitLayout;
+    setForceSplitLayout(next);
+    try {
+      localStorage.setItem("abuadel_pos_split_layout", String(next));
+    } catch {}
+  };
 
   // Custom Weighed Sweet Box Builder (تكوين علبة مشكل بالوزن - ورقة الميزان)
   const [showBoxBuilderModal, setShowBoxBuilderModal] = useState<boolean>(false);
@@ -908,7 +932,12 @@ export default function PosTerminalPage() {
 
         const data = await res.json();
         if (data.success && data.order) {
-          setLastPrintedOrder(data.order);
+          const orderWithShift = {
+            ...data.order,
+            shiftCode: data.order.shiftCode || activeShift?.shiftCode || "SHIFT_1",
+            shiftName: activeShift?.shiftName,
+          };
+          setLastPrintedOrder(orderWithShift);
           setCart([]);
           setSelectedTable(null);
           setRedeemPosGift(false);
@@ -926,7 +955,7 @@ export default function PosTerminalPage() {
               : "";
           showToast("success", (data.message || "تم تحصيل الشيك بنجاح 💵") + loyaltyNote);
           await loadPosData();
-          setTimeout(() => printThermalHtml(generateSoulmateReceiptHtml(data.order, settings)), 200);
+          setTimeout(() => printThermalHtml(generateSoulmateReceiptHtml(orderWithShift, settings)), 200);
         } else {
           showToast("error", data.error || "فشل التحصيل");
         }
@@ -979,7 +1008,12 @@ export default function PosTerminalPage() {
           });
           const settleData = await resSettle.json();
           if (settleData.success && settleData.order) {
-            setLastPrintedOrder(settleData.order);
+            const orderWithShift = {
+              ...settleData.order,
+              shiftCode: settleData.order.shiftCode || activeShift?.shiftCode || "SHIFT_1",
+              shiftName: activeShift?.shiftName,
+            };
+            setLastPrintedOrder(orderWithShift);
             setCart([]);
             setSelectedTable(null);
             setRedeemPosGift(false);
@@ -999,7 +1033,7 @@ export default function PosTerminalPage() {
                 : "";
             showToast("success", `تم تسجيل وتحصيل الشيك بنجاح 💵${loyaltyNote}`);
             await loadPosData();
-            setTimeout(() => printThermalHtml(generateSoulmateReceiptHtml(settleData.order, settings)), 200);
+            setTimeout(() => printThermalHtml(generateSoulmateReceiptHtml(orderWithShift, settings)), 200);
           } else {
             showToast("error", settleData.error || "فشل تسوية الطلب");
           }
@@ -1403,6 +1437,23 @@ export default function PosTerminalPage() {
 
           <ThemeToggle compact />
 
+          {/* Split Layout vs Tabbed Layout Toggle */}
+          <button
+            type="button"
+            onClick={toggleSplitLayout}
+            className={`py-1.5 px-2.5 rounded-xl border text-xs font-black transition flex items-center gap-1.5 cursor-pointer shadow-sm ${
+              forceSplitLayout
+                ? "bg-amber-500/20 border-amber-400/50 text-amber-200 hover:bg-amber-500/30"
+                : "bg-white/5 border-white/10 text-slate-300 hover:bg-white/10"
+            }`}
+            title="تبديل طريقة عرض شاشة الكاشير (شاشتين مقسمة جنباً إلى جنب / شاشة مبوبة)"
+          >
+            <Columns className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline">
+              {forceSplitLayout ? "شاشتين مقسمة ◫" : "شاشة مبوبة 📱"}
+            </span>
+          </button>
+
           {/* Sales Report Modal Button */}
           <button
             type="button"
@@ -1503,49 +1554,59 @@ export default function PosTerminalPage() {
         </div>
       </header>
 
-      {/* Mobile View Switcher Bar (< lg screens) */}
-      <div className="lg:hidden sticky top-0 z-30 bg-[#0d0910]/95 backdrop-blur-md border-b border-white/10 px-3 py-2 grid grid-cols-2 gap-2 no-print">
-        <button
-          type="button"
-          onClick={() => setMobilePane("MENU")}
-          className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
-            mobilePane === "MENU"
-              ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
-              : "bg-white/5 text-slate-300 border border-white/10"
-          }`}
-        >
-          <span>🛍️ المنيو والأصناف</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-black/25 text-[10px] font-mono">
-            {filteredMenuItems.length}
-          </span>
-        </button>
-        <button
-          type="button"
-          onClick={() => setMobilePane("CART")}
-          className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
-            mobilePane === "CART"
-              ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20"
-              : cart.length > 0
-              ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/40"
-              : "bg-white/5 text-slate-300 border border-white/10"
-          }`}
-        >
-          <span>🧾 الفاتورة</span>
-          <span className="px-1.5 py-0.5 rounded-full bg-black/25 text-[10px] font-mono">
-            {cart.reduce((s, it) => s + (it.isCustomBox ? 1 : Number(it.qty || 1)), 0)} • {calculatedFinal} ج
-          </span>
-        </button>
-      </div>
+      {/* Mobile View Switcher Bar (Hidden if forceSplitLayout is enabled or on md+ screens) */}
+      {!forceSplitLayout && (
+        <div className="md:hidden sticky top-0 z-30 bg-[#0d0910]/95 backdrop-blur-md border-b border-white/10 px-3 py-2 grid grid-cols-2 gap-2 no-print">
+          <button
+            type="button"
+            onClick={() => setMobilePane("MENU")}
+            className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              mobilePane === "MENU"
+                ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
+                : "bg-white/5 text-slate-300 border border-white/10"
+            }`}
+          >
+            <span>🛍️ المنيو والأصناف</span>
+            <span className="px-1.5 py-0.5 rounded-full bg-black/25 text-[10px] font-mono">
+              {filteredMenuItems.length}
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setMobilePane("CART")}
+            className={`py-2 px-3 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 cursor-pointer ${
+              mobilePane === "CART"
+                ? "bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/20"
+                : cart.length > 0
+                ? "bg-emerald-500/15 text-emerald-300 border border-emerald-500/40"
+                : "bg-white/5 text-slate-300 border border-white/10"
+            }`}
+          >
+            <span>🧾 الفاتورة</span>
+            <span className="px-1.5 py-0.5 rounded-full bg-black/25 text-[10px] font-mono">
+              {cart.reduce((s, it) => s + (it.isCustomBox ? 1 : Number(it.qty || 1)), 0)} • {calculatedFinal} ج
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* ─────────────────────────────────────────────────────────────
-          2. MAIN POS WORKSPACE: 2 WIDE COLUMNS (MENU CATALOG 8 COLS | CART & CHECKOUT 4 COLS)
+          2. MAIN POS WORKSPACE: 2 WIDE COLUMNS (MENU CATALOG 7-8 COLS | CART & CHECKOUT 4-5 COLS)
          ───────────────────────────────────────────────────────────── */}
-      <div className="lg:flex-1 lg:min-h-0 lg:h-[calc(100vh-58px)] lg:max-h-[calc(100vh-58px)] grid grid-cols-1 lg:grid-cols-12 gap-3 p-2.5 sm:p-3 lg:overflow-hidden pb-20 lg:pb-3 no-print">
-        {/* COLUMN 1: MENU CATALOG & SEARCH (8 Cols - Wide & Spacious!) */}
+      <div
+        className={`${
+          forceSplitLayout
+            ? "flex-1 min-h-0 h-[calc(100vh-58px)] max-h-[calc(100vh-58px)] grid grid-cols-12 gap-2.5 sm:gap-3 p-2 sm:p-3 overflow-hidden pb-3"
+            : "md:flex-1 md:min-h-0 md:h-[calc(100vh-58px)] md:max-h-[calc(100vh-58px)] grid grid-cols-1 md:grid-cols-12 gap-3 p-2.5 sm:p-3 md:overflow-hidden pb-20 md:pb-3"
+        } no-print`}
+      >
+        {/* COLUMN 1: MENU CATALOG & SEARCH (7-8 Cols - Wide & Spacious!) */}
         <div
           className={`${
-            mobilePane === "MENU" ? "flex" : "hidden lg:flex"
-          } lg:col-span-8 lg:h-full lg:max-h-full bg-[#110c14] border border-white/10 rounded-2xl p-3 sm:p-3.5 flex-col lg:overflow-hidden shadow-xl`}
+            forceSplitLayout
+              ? "col-span-7 lg:col-span-8 flex flex-col h-full max-h-full overflow-hidden"
+              : `${mobilePane === "MENU" ? "flex" : "hidden md:flex"} col-span-1 md:col-span-7 lg:col-span-8 md:h-full md:max-h-full md:overflow-hidden flex-col`
+          } bg-[#110c14] border border-white/10 rounded-2xl p-2.5 sm:p-3.5 shadow-xl`}
         >
           {/* Search Bar & Categories Header */}
           <div className="shrink-0 space-y-2 pb-2">
@@ -1668,8 +1729,14 @@ export default function PosTerminalPage() {
           </div>
         </div>
 
-        {/* COLUMN 2: CART, BILL & PINNED SETTLEMENT (4 Cols) */}
-        <div className={`${mobilePane === "CART" ? "flex" : "hidden lg:flex"} lg:col-span-4 lg:h-full lg:max-h-full bg-[#110c14] border border-white/10 rounded-2xl p-3 flex-col lg:overflow-hidden shadow-xl`}>
+        {/* COLUMN 2: CART, BILL & PINNED SETTLEMENT (4-5 Cols) */}
+        <div
+          className={`${
+            forceSplitLayout
+              ? "col-span-5 lg:col-span-4 flex flex-col h-full max-h-full overflow-hidden"
+              : `${mobilePane === "CART" ? "flex" : "hidden md:flex"} col-span-1 md:col-span-5 lg:col-span-4 md:h-full md:max-h-full md:overflow-hidden flex-col`
+          } bg-[#110c14] border border-white/10 rounded-2xl p-2.5 sm:p-3 shadow-xl`}
+        >
           {/* Header & Quick Table Selector Button */}
           <div className="shrink-0 space-y-2 pb-2 border-b border-white/10">
             <div className="flex items-center justify-between">
@@ -2337,7 +2404,15 @@ export default function PosTerminalPage() {
                     </button>
                     <button
                       type="button"
-                      onClick={() => printThermalHtml(generateSoulmateReceiptHtml(lastPrintedOrder, settings))}
+                      onClick={() => {
+                        if (!lastPrintedOrder) return;
+                        const orderWithShift = {
+                          ...lastPrintedOrder,
+                          shiftCode: lastPrintedOrder.shiftCode || activeShift?.shiftCode || "SHIFT_1",
+                          shiftName: activeShift?.shiftName,
+                        };
+                        printThermalHtml(generateSoulmateReceiptHtml(orderWithShift, settings));
+                      }}
                       className="px-2 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold flex items-center gap-1 cursor-pointer text-[11px]"
                       title="إعادة طباعة البون"
                     >
@@ -2377,9 +2452,9 @@ export default function PosTerminalPage() {
         </div>
       </div>
 
-      {/* MOBILE FLOATING CART BAR (Visible only on MENU pane when cart has items) */}
-      {mobilePane === "MENU" && cart.length > 0 && (
-        <div className="lg:hidden fixed bottom-3 inset-x-3 z-40 no-print">
+      {/* MOBILE FLOATING CART BAR (Visible only on MENU pane when cart has items and NOT in forced split) */}
+      {!forceSplitLayout && mobilePane === "MENU" && cart.length > 0 && (
+        <div className="md:hidden fixed bottom-3 inset-x-3 z-40 no-print">
           <button
             type="button"
             onClick={() => setMobilePane("CART")}

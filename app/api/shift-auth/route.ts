@@ -71,8 +71,30 @@ export async function POST(req: NextRequest) {
         ? setting.shift1Name || "الوردية الأولى (الصباحية)"
         : setting.shift2Name || "الوردية الثانية (المسائية)";
 
+    // Sync any open Shift in the database to this shiftCode and shiftNumber
+    try {
+      const openShift = await prisma.shift.findFirst({
+        where: { status: "OPEN" },
+        orderBy: { openedAt: "desc" },
+      });
+      if (openShift) {
+        await prisma.shift.update({
+          where: { id: openShift.id },
+          data: {
+            shiftCode: shiftCode,
+            shiftNumber: shiftCode === "SHIFT_2" ? 2 : 1,
+            shiftName: shiftName,
+          },
+        });
+      }
+    } catch (e) {
+      console.error("Failed to sync openShift shiftCode in DB:", e);
+    }
+
     return NextResponse.json({
       success: true,
+      shiftCode,
+      shiftName,
       shift: {
         code: shiftCode,
         name: shiftName,

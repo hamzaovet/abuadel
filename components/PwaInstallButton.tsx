@@ -183,8 +183,9 @@ export default function PwaInstallButton({
                 </ol>
               </div>
 
-              <div className="text-[11px] text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-center">
-                ✓ سيتم فتح السيستم فوراً كنافذة تطبيق مستقلة بدون شريط متصفح لسرعة العمل!
+              <div className="text-[11px] text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 p-2.5 rounded-xl text-center space-y-1">
+                <div>✓ سيتم فتح السيستم فوراً كنافذة تطبيق مستقلة بدون شريط متصفح لسرعة العمل!</div>
+                <div className="text-[10px] text-amber-300">⚡ تدعم الأيقونة وضع الطباعة الصامتة المباشرة (Kiosk Printing) بدون نافذة اختيار الطابعة كل مرة!</div>
               </div>
             </div>
 

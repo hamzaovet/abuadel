@@ -305,7 +305,13 @@ export function generateAbuAdelReceiptHtml(order: any, settings?: any): string {
 
   <div class="meta-row">
     <span>الكاشير: ${order.cashierName || "كاشير أبو عادل"}</span>
-    <span>الوردية: ${(order.shiftCode || "SHIFT_1") === "SHIFT_2" ? "المسائية" : "الصباحية"}</span>
+    <span>الوردية: ${
+      order.shiftName
+        ? order.shiftName
+        : (order.shiftCode === "SHIFT_2" || order.shiftCode === "2" || String(order.shiftCode || "").includes("مسائ")
+          ? "المسائية"
+          : "الصباحية")
+    }</span>
   </div>
 
   ${

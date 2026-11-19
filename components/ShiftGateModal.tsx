@@ -14,7 +14,7 @@ const STORAGE_KEY = "abuadel_active_shift";
 export function getStoredShift(): ActiveShiftInfo | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (parsed?.shiftCode === "SHIFT_1" || parsed?.shiftCode === "SHIFT_2") {
@@ -29,6 +29,7 @@ export function getStoredShift(): ActiveShiftInfo | null {
 export function setStoredShift(info: ActiveShiftInfo) {
   if (typeof window === "undefined") return;
   try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(info));
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(info));
     window.dispatchEvent(new CustomEvent("soulmate-shift-changed", { detail: info }));
   } catch {
@@ -39,6 +40,7 @@ export function setStoredShift(info: ActiveShiftInfo) {
 export function clearStoredShift() {
   if (typeof window === "undefined") return;
   try {
+    localStorage.removeItem(STORAGE_KEY);
     sessionStorage.removeItem(STORAGE_KEY);
   } catch {
     // ignore
@@ -75,7 +77,7 @@ export default function ShiftGateModal({
     if (!open) return;
     setPin("");
     setError(null);
-    setSelected(currentShiftCode === "SHIFT_1" ? "SHIFT_2" : "SHIFT_1");
+    setSelected(currentShiftCode === "SHIFT_2" ? "SHIFT_2" : "SHIFT_1");
     fetch("/api/shift-auth")
       .then((r) => r.json())
       .then((d) => {
@@ -124,9 +126,15 @@ export default function ShiftGateModal({
         setPin("");
         return;
       }
+      const code: "SHIFT_1" | "SHIFT_2" = data.shiftCode || data.shift?.code || selected;
+      const name: string =
+        data.shiftName ||
+        data.shift?.name ||
+        shiftNames[code] ||
+        (code === "SHIFT_2" ? "الوردية الثانية (المسائية)" : "الوردية الأولى (الصباحية)");
       const activeShift: ActiveShiftInfo = {
-        shiftCode: data.shiftCode,
-        shiftName: data.shiftName,
+        shiftCode: code,
+        shiftName: name,
         activatedAt: new Date().toISOString(),
       };
       setStoredShift(activeShift);

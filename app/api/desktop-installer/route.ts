@@ -40,7 +40,7 @@ foreach ($folder in @($d, $p)) {
   $lnk = $ws.CreateShortcut((Join-Path $folder ($title + '.lnk')))
   if ($browser -and (Test-Path $browser)) {
     $lnk.TargetPath = $browser
-    $lnk.Arguments = '--app=' + $url + ' --start-maximized'
+    $lnk.Arguments = '--app=' + $url + ' --start-maximized --kiosk-printing'
   } else {
     $lnk.TargetPath = $url
   }
@@ -50,8 +50,8 @@ foreach ($folder in @($d, $p)) {
 }
 
 Write-Host ''
-Write-Host '  [OK] تم تثبيت أيقونة حلواني أبو عادل على سطح المكتب بنجاح!' -ForegroundColor Green
-Start-Process $browser -ArgumentList ('--app=' + $url + ' --start-maximized')
+Write-Host '  [OK] تم تثبيت أيقونة حلواني أبو عادل على سطح المكتب بنجاح مع تفعيل الطباعة الحرارية المباشرة (Kiosk Printing) بدون نوافذ اختيار!' -ForegroundColor Green
+Start-Process $browser -ArgumentList ('--app=' + $url + ' --start-maximized --kiosk-printing')
 `;
 
   const encoded = Buffer.from(psScript, "utf16le").toString("base64");

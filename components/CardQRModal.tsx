@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { X, Printer, QrCode, Cake, Copy, Check, ExternalLink, Zap } from "lucide-react";
+import { X, Printer, QrCode, Copy, Check, ExternalLink, Sparkles } from "lucide-react";
 
 interface CardQRModalProps {
   isOpen: boolean;
@@ -30,7 +30,7 @@ export default function CardQRModal({
 
   // The Smart Hub URL
   const hubUrl = `${origin}/hub`;
-  const qrImgSrc = `https://api.qrserver.com/v1/create-qr-code/?size=460x460&margin=12&color=2b0b16&bgcolor=fffdf8&data=${encodeURIComponent(
+  const qrImgSrc = `https://api.qrserver.com/v1/create-qr-code/?size=460x460&margin=12&color=000000&bgcolor=ffffff&data=${encodeURIComponent(
     hubUrl
   )}`;
 
@@ -61,23 +61,23 @@ export default function CardQRModal({
       font-family: "Segoe UI", Tahoma, Arial, sans-serif;
       -webkit-print-color-adjust: exact !important;
       print-color-adjust: exact !important;
-      padding: 10mm;
+      padding: 8mm;
     }
     .card {
-      width: 136mm;
-      padding: 10mm 10mm 8mm 10mm;
+      width: 134mm;
+      padding: 8mm 8mm 6mm 8mm;
       border-radius: 26px;
-      background: linear-gradient(165deg, #220a16 0%, #11050b 60%, #1a0812 100%);
-      border: 3px solid #d97706;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 25px rgba(217,119,6,0.15);
-      color: #fff1f2;
+      background: linear-gradient(165deg, #1f0a14 0%, #11050b 60%, #1a0812 100%);
+      border: 3px solid #f59e0b;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 25px rgba(245,158,11,0.2);
+      color: #ffffff;
       text-align: center;
       position: relative;
     }
     .emblem-wrapper {
-      width: 80px;
-      height: 80px;
-      margin: 0 auto 8px auto;
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 6px auto;
       border-radius: 50%;
       background: #14080e;
       border: 2.5px solid #fbbf24;
@@ -85,7 +85,7 @@ export default function CardQRModal({
       align-items: center;
       justify-content: center;
       padding: 4px;
-      box-shadow: 0 4px 15px rgba(251,191,36,0.3);
+      box-shadow: 0 4px 15px rgba(251,191,36,0.35);
     }
     .emblem-wrapper img {
       width: 100%;
@@ -110,41 +110,40 @@ export default function CardQRModal({
     .sub {
       font-size: 11px;
       font-weight: 700;
-      color: #fde68a;
-      opacity: 0.85;
+      color: #fef08a;
       margin-top: 3px;
     }
     .badges-row {
       display: flex;
       justify-content: center;
       gap: 6px;
-      margin-top: 10px;
+      margin-top: 8px;
       flex-wrap: wrap;
     }
     .badge {
       font-size: 10px;
-      font-weight: 800;
+      font-weight: 900;
       padding: 3px 8px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(251,191,36,0.4);
-      color: #fef08a;
+      background: rgba(251,191,36,0.15);
+      border: 1.5px solid #f59e0b;
+      color: #ffffff;
     }
     .headline {
-      margin-top: 12px;
+      margin-top: 10px;
       font-size: 15px;
       font-weight: 900;
       color: #ffffff;
-      background: rgba(244,63,94,0.18);
-      border: 1px dashed rgba(244,63,94,0.4);
+      background: rgba(244,63,94,0.25);
+      border: 1.5px dashed #f43f5e;
       padding: 6px 12px;
       border-radius: 12px;
     }
     .qr-box {
-      margin: 12px auto;
+      margin: 10px auto;
       width: 220px;
       height: 220px;
-      padding: 10px;
+      padding: 8px;
       border-radius: 20px;
       background: #ffffff;
       border: 3.5px solid #fbbf24;
@@ -166,15 +165,15 @@ export default function CardQRModal({
       color: #34d399;
       font-family: monospace;
       font-size: 12px;
+      font-weight: 900;
     }
     .footer {
-      margin-top: 10px;
+      margin-top: 8px;
       padding-top: 6px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      font-size: 9.5px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      font-size: 10px;
       color: #fbbf24;
-      opacity: 0.85;
-      font-weight: 700;
+      font-weight: 800;
     }
   </style>
 </head>
@@ -218,73 +217,65 @@ export default function CardQRModal({
   return (
     <div
       dir="rtl"
-      className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-150"
+      className="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-150"
     >
-      <div className="w-full max-w-md rounded-3xl bg-[#160b10] border border-amber-500/40 text-rose-50 shadow-2xl overflow-hidden">
-        {/* Header */}
-        <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between bg-gradient-to-r from-rose-950/60 to-amber-950/60">
-          <div className="flex items-center gap-2">
-            <QrCode className="w-5 h-5 text-amber-400" />
-            <h2 className="text-base font-black text-amber-200">كارت QR الذكي — حلواني أبو عادل</h2>
+      <div className="w-full max-w-md rounded-3xl bg-[#14080e] border-2 border-amber-400 text-white shadow-2xl overflow-hidden">
+        {/* Header (High Contrast) */}
+        <div className="px-5 py-4 border-b-2 border-amber-400/40 flex items-center justify-between bg-gradient-to-r from-rose-950 via-[#1f0a14] to-amber-950">
+          <div className="flex items-center gap-2.5">
+            <div className="p-1.5 rounded-xl bg-amber-400 text-slate-950">
+              <QrCode className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-black text-amber-300">
+                كارت QR الذكي — حلواني أبو عادل
+              </h2>
+              <p className="text-[11px] text-rose-300 font-bold">احنا الحلو اللى بيحلو ✨</p>
+            </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl bg-white/10 hover:bg-rose-500/30 text-rose-100 transition cursor-pointer"
+            className="p-1.5 rounded-xl bg-white/15 hover:bg-rose-600 text-white transition cursor-pointer"
           >
-            <X className="w-4 h-4" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-5 text-center space-y-3.5">
-          {/* Logo & Headline */}
-          <div className="flex items-center justify-center gap-2">
-            <div className="w-10 h-10 rounded-full border border-amber-400/60 bg-[#12080f] p-0.5 overflow-hidden shrink-0">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/abuadel-emblem.svg"
-                alt="أبو عادل"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <div className="text-right">
-              <h3 className="text-sm font-black text-amber-200">حلواني أبو عادل — Haliy Youmak</h3>
-              <p className="text-[11px] text-rose-300 font-bold">احنا الحلو اللى بيحلو ✨</p>
-            </div>
-          </div>
-
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/15 text-rose-200 text-xs font-black border border-rose-500/30">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
+        <div className="p-5 text-center space-y-4">
+          {/* Action Badge (Bright High Contrast) */}
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-amber-400 text-slate-950 text-xs font-black shadow-md">
+            <Sparkles className="w-3.5 h-3.5" />
             <span>يفتح صفحة الأيقونات الذكية: دليفري، حجز تورت، إنستاباي، وسوشيال</span>
           </div>
 
           {/* QR Code Container */}
-          <div className="mx-auto w-52 h-52 p-3 rounded-2xl bg-[#fffdf8] border-2 border-amber-400 shadow-xl">
+          <div className="mx-auto w-56 h-56 p-3 rounded-2xl bg-white border-4 border-amber-400 shadow-2xl flex items-center justify-center">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={qrImgSrc} alt="Abu Adel QR" className="w-full h-full object-contain" />
           </div>
 
-          {/* Link Box */}
-          <div className="rounded-xl bg-black/60 border border-white/10 px-3 py-2 flex items-center justify-between gap-2 text-xs">
-            <span className="font-mono text-amber-200 truncate text-[11px]" dir="ltr">
+          {/* Link Box (High Contrast) */}
+          <div className="rounded-xl bg-black border-2 border-amber-400/70 p-2.5 flex items-center justify-between gap-2 text-xs">
+            <span className="font-mono text-amber-300 font-black truncate text-xs sm:text-sm" dir="ltr">
               {hubUrl}
             </span>
             <button
               type="button"
               onClick={handleCopy}
-              className="px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 border border-amber-500/40 text-amber-300 font-bold flex items-center gap-1 shrink-0 text-xs transition cursor-pointer"
+              className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-slate-950 font-black flex items-center gap-1.5 shrink-0 text-xs transition cursor-pointer shadow"
             >
-              {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              {copied ? "تم النسخ" : "نسخ الرابط"}
+              {copied ? <Check className="w-4 h-4 text-emerald-800" /> : <Copy className="w-4 h-4" />}
+              {copied ? "تم النسخ!" : "نسخ الرابط"}
             </button>
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="grid grid-cols-2 gap-2.5 pt-1">
             <button
               type="button"
               onClick={handlePrintCard}
-              className="py-2.5 px-3 rounded-xl bg-gradient-to-l from-rose-600 to-amber-500 hover:brightness-110 text-slate-950 font-black text-xs flex items-center justify-center gap-1.5 shadow-lg transition cursor-pointer"
+              className="py-3 px-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-slate-950 font-black text-xs sm:text-sm flex items-center justify-center gap-2 shadow-xl transition cursor-pointer"
             >
               <Printer className="w-4 h-4" />
               <span>طباعة كارت QR 🖨️</span>
@@ -294,14 +285,14 @@ export default function CardQRModal({
               href="/hub"
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 px-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-bold text-xs flex items-center justify-center gap-1.5 transition"
+              className="py-3 px-3 rounded-xl bg-white/15 hover:bg-white/25 border-2 border-white/30 text-white font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow"
             >
-              <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+              <ExternalLink className="w-4 h-4 text-amber-300" />
               <span>معاينة الرابط الذكي</span>
             </a>
           </div>
 
-          <div className="pt-2 border-t border-white/5 text-[10px] text-amber-200/50">
+          <div className="pt-2 border-t border-white/15 text-xs text-amber-200 font-bold">
             تطوير شركة أوركا للحلول البرمجية (Orca Tech) 🐬 • 📞 01018671000
           </div>
         </div>

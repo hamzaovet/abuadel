@@ -70,7 +70,7 @@ export default function AbuAdelHomePage() {
                 <h2 className="text-base font-black text-white group-hover:text-emerald-200">الرابط الذكي والدفع</h2>
                 <ArrowLeft className="w-4 h-4 text-emerald-400 group-hover:translate-x-[-2px] transition" />
               </div>
-              <p className="text-xs text-emerald-200/90 font-bold mt-1 leading-relaxed">
+              <p className="text-xs text-emerald-900 dark:text-emerald-200/90 font-bold mt-1 leading-relaxed">
                 باركود QR، إنستاباي، فودافون كاش، محادثة واتساب، وصفحات السوشيال ميديا.
               </p>
             </div>
@@ -89,7 +89,7 @@ export default function AbuAdelHomePage() {
                 <h2 className="text-base font-black text-white group-hover:text-rose-200">دليفري وتيك أواي</h2>
                 <ArrowLeft className="w-4 h-4 text-rose-400 group-hover:translate-x-[-2px] transition" />
               </div>
-              <p className="text-xs text-rose-200/90 font-bold mt-1 leading-relaxed">
+              <p className="text-xs text-rose-950 dark:text-rose-200/90 font-bold mt-1 leading-relaxed">
                 اطلب الحلويات والجاتوهات توصيل سريع لباب البيت أو استلام فوري من المحل.
               </p>
             </div>
@@ -108,7 +108,7 @@ export default function AbuAdelHomePage() {
                 <h2 className="text-base font-black text-white group-hover:text-amber-200">حجز تورت بموعد</h2>
                 <ArrowLeft className="w-4 h-4 text-amber-400 group-hover:translate-x-[-2px] transition" />
               </div>
-              <p className="text-xs text-amber-200/90 font-bold mt-1 leading-relaxed">
+              <p className="text-xs text-amber-950 dark:text-amber-200/90 font-bold mt-1 leading-relaxed">
                 احجز تورتتك أو مناسبتك وحدد موعد وتاريخ الاستلام أو التوصيل مسبقاً.
               </p>
             </div>
@@ -127,7 +127,7 @@ export default function AbuAdelHomePage() {
                 <h2 className="text-base font-black text-white">بوابة الإدارة والكاشير</h2>
                 <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:translate-x-[-2px] transition" />
               </div>
-              <p className="text-xs text-slate-300 font-bold mt-1 leading-relaxed">
+              <p className="text-xs text-slate-800 dark:text-slate-300 font-bold mt-1 leading-relaxed">
                 نقطة البيع (POS)، الورديات، مخزن الحلويات، طلبيات المصنع، والتقارير.
               </p>
             </div>

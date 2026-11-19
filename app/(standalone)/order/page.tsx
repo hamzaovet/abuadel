@@ -878,12 +878,14 @@ function AbuAdelOrderInner() {
           </div>
 
           {/* 3 Clean Order Mode Tabs (NO Dine-In!) */}
-          <div className="flex items-center gap-1 bg-black/50 p-1 rounded-2xl border border-white/10">
+          <div className="flex items-center gap-1 bg-slate-200/80 dark:bg-black/50 p-1 rounded-2xl border border-slate-300 dark:border-white/10">
             <button
               type="button"
               onClick={() => setMode("DELIVERY")}
               className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 transition ${
-                mode === "DELIVERY" ? "bg-rose-500 text-white shadow" : "text-white/70 hover:text-white"
+                mode === "DELIVERY"
+                  ? "bg-rose-500 text-white shadow"
+                  : "text-slate-700 hover:text-slate-950 dark:text-white/70 dark:hover:text-white"
               }`}
             >
               <Bike className="w-3.5 h-3.5" />
@@ -893,7 +895,9 @@ function AbuAdelOrderInner() {
               type="button"
               onClick={() => setMode("TAKEAWAY")}
               className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 transition ${
-                mode === "TAKEAWAY" ? "bg-amber-500 text-black shadow" : "text-white/70 hover:text-white"
+                mode === "TAKEAWAY"
+                  ? "bg-amber-500 text-slate-950 shadow"
+                  : "text-slate-700 hover:text-slate-950 dark:text-white/70 dark:hover:text-white"
               }`}
             >
               <Store className="w-3.5 h-3.5" />
@@ -904,8 +908,8 @@ function AbuAdelOrderInner() {
               onClick={() => setMode("PREORDER")}
               className={`px-3 py-1.5 rounded-xl text-xs font-black flex items-center gap-1 transition ${
                 mode === "PREORDER"
-                  ? "bg-gradient-to-l from-amber-400 to-rose-500 text-black shadow"
-                  : "text-amber-200/80 hover:text-white"
+                  ? "bg-gradient-to-l from-amber-400 to-rose-500 text-slate-950 shadow"
+                  : "text-slate-700 hover:text-slate-950 dark:text-amber-200/80 dark:hover:text-white"
               }`}
             >
               <CalendarClock className="w-3.5 h-3.5" />
@@ -940,10 +944,10 @@ function AbuAdelOrderInner() {
           <button
             type="button"
             onClick={() => setActiveCategory("ALL")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-black whitespace-nowrap border transition ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-black whitespace-nowrap border transition shadow-sm ${
               activeCategory === "ALL"
-                ? "bg-amber-500 text-black border-amber-400"
-                : "bg-white/5 text-amber-100/75 border-white/10 hover:bg-white/10"
+                ? "bg-amber-500 text-slate-950 border-amber-400"
+                : "bg-white dark:bg-white/5 text-slate-800 dark:text-amber-100/80 border-slate-300 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10"
             }`}
           >
             كل الأقسام ({menuItems.length})
@@ -953,10 +957,10 @@ function AbuAdelOrderInner() {
               key={cat.code}
               type="button"
               onClick={() => setActiveCategory(cat.code)}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-black whitespace-nowrap border transition ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-black whitespace-nowrap border transition shadow-sm ${
                 activeCategory === cat.code
-                  ? "bg-amber-500 text-black border-amber-400"
-                  : "bg-white/5 text-amber-100/75 border-white/10 hover:bg-white/10"
+                  ? "bg-amber-500 text-slate-950 border-amber-400"
+                  : "bg-white dark:bg-white/5 text-slate-800 dark:text-amber-100/80 border-slate-300 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/10"
               }`}
             >
               {cat.label} ({cat.count})

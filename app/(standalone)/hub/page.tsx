@@ -224,7 +224,7 @@ export default function AbuAdelSmartHubPage() {
                   </h2>
                   <span className="text-sm">🛵</span>
                 </div>
-                <p className="text-xs text-rose-200 font-bold truncate mt-0.5">
+                <p className="text-xs text-rose-950 dark:text-rose-200 font-bold truncate mt-0.5">
                   توصيل سريع وطازج لباب بيتك بحدائق القبة والمناطق المجاورة
                 </p>
               </div>
@@ -250,7 +250,7 @@ export default function AbuAdelSmartHubPage() {
                   </h2>
                   <span className="text-sm">🛍️</span>
                 </div>
-                <p className="text-xs text-amber-200 font-bold truncate mt-0.5">
+                <p className="text-xs text-amber-950 dark:text-amber-200 font-bold truncate mt-0.5">
                   اطلب مسبقاً واستلم أوردرك طازج وجاهز بدون أي انتظار
                 </p>
               </div>
@@ -276,7 +276,7 @@ export default function AbuAdelSmartHubPage() {
                   </h2>
                   <span className="text-sm">🎂</span>
                 </div>
-                <p className="text-xs text-purple-200 font-bold truncate mt-0.5">
+                <p className="text-xs text-purple-950 dark:text-purple-200 font-bold truncate mt-0.5">
                   احجز تورتتك لمناسبتك الخاصة وحدد موعد الاستلام أو التوصيل
                 </p>
               </div>
@@ -305,7 +305,7 @@ export default function AbuAdelSmartHubPage() {
                     QR كود ⚡
                   </span>
                 </div>
-                <p className="text-xs text-emerald-200 font-bold truncate mt-0.5">
+                <p className="text-xs text-emerald-950 dark:text-emerald-200 font-bold truncate mt-0.5">
                   أرقام وباركود فودافون كاش ({vodaNum}) وإنستاباي ({instaNum})
                 </p>
               </div>
@@ -330,7 +330,7 @@ export default function AbuAdelSmartHubPage() {
                 <h3 className="text-sm sm:text-base font-black text-white group-hover:text-green-300 transition">
                   واتساب الطلبات والاستفسارات
                 </h3>
-                <p className="text-xs text-green-200 font-mono font-bold truncate mt-0.5" dir="ltr">
+                <p className="text-xs text-green-950 dark:text-green-200 font-mono font-bold truncate mt-0.5" dir="ltr">
                   +20 {whatsappNum}
                 </p>
               </div>
@@ -351,7 +351,7 @@ export default function AbuAdelSmartHubPage() {
                 <h3 className="text-sm sm:text-base font-black text-white group-hover:text-sky-300 transition">
                   اتصال هاتفي مباشر بالفرع
                 </h3>
-                <p className="text-xs text-sky-200 font-mono font-bold truncate mt-0.5" dir="ltr">
+                <p className="text-xs text-sky-950 dark:text-sky-200 font-mono font-bold truncate mt-0.5" dir="ltr">
                   {storePhone}
                 </p>
               </div>
@@ -376,7 +376,7 @@ export default function AbuAdelSmartHubPage() {
                 <h3 className="text-sm sm:text-base font-black text-white group-hover:text-amber-300 transition">
                   موقع الفرع على خرائط جوجل
                 </h3>
-                <p className="text-xs text-amber-200 font-bold truncate mt-0.5">
+                <p className="text-xs text-amber-950 dark:text-amber-200 font-bold truncate mt-0.5">
                   {storeAddress}
                 </p>
               </div>
